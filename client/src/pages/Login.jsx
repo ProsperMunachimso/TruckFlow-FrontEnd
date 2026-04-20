@@ -1,0 +1,7 @@
+import React from 'react';
+
+const Login = () => {
+  return <div>Login Page (coming soon)</div>;
+};
+
+export default Login;
