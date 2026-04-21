@@ -1,3 +1,4 @@
+
 import React, { createContext, useState, useEffect } from 'react';
 import API from '../services/api';
 
@@ -21,12 +22,17 @@ export const AuthProvider = ({ children }) => {
     };
     checkAuth();
   }, []);
-
+  
   const login = async (email, password) => {
+  try {
     const res = await API.post('/api/users/login', { email, password });
     setUser(res.data);
     return res.data;
-  };
+  } catch (error) {
+    console.error('Login error:', error);
+    throw error;
+  }
+};
 
   const register = async (userData) => {
     const res = await API.post('/api/users/register', userData);
@@ -45,4 +51,3 @@ export const AuthProvider = ({ children }) => {
     </AuthContext.Provider>
   );
 };
-
