@@ -22,6 +22,9 @@ function App() {
             <Route path="/profile" element={<Profile />} />
             <Route path="/bookings/new" element={<CreateBooking />} />
             <Route path="/bookings" element={<MyBookings />} />
+            <Route path="/transporter-dashboard" element={<TransporterDashboard />} />
+            <Route path="/quotes/new/:bookingId" element={<CreateQuote />} />
+            <Route path="/my-quotes" element={<MyQuotes />} />
           </Route>
         </Routes>
       </BrowserRouter>
