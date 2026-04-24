@@ -8,6 +8,9 @@ import Dashboard from './pages/Dashboard';
 import CreateBooking from './pages/CreateBooking';
 import MyBookings from './pages/MyBookings';
 import Profile from './pages/Profile';
+import TransporterDashboard from './pages/TransporterDashboard';
+import CreateQuote from './pages/CreateQuote';
+import MyQuotes from './pages/MyQuotes';
 
 function App() {
   return (

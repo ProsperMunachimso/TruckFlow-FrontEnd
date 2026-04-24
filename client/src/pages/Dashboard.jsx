@@ -17,8 +17,20 @@ const Dashboard = () => {
       <p>Email: {user?.email}</p>
 
       <div className="dashboard-links">
-        <Link to="/bookings/new">Create a Booking</Link>
-        <Link to="/bookings">My Bookings</Link>
+        {user?.role === 'client' && (
+          <>
+            <Link to="/bookings/new">Create a Booking</Link>
+            <Link to="/bookings">My Bookings</Link>
+          </>
+        )}
+
+        {user?.role === 'transporter' && (
+          <>
+            <Link to="/transporter-dashboard">Find Bookings to Quote</Link>
+            <Link to="/my-quotes">My Quotes</Link>
+          </>
+        )}
+
         <Link to="/profile">My Profile</Link>
         <button onClick={handleLogout}>Logout</button>
       </div>
