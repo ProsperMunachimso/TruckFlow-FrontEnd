@@ -25,12 +25,16 @@ const Profile = () => {
     e.preventDefault();
     try {
       const res = await API.put('/api/users/profile', formData);
-      setMessage('Profile updated successfully');
-      // Update user context with new data
-      setUser({ ...user, ...formData });
-    } catch (err) {
-      setMessage('Update failed');
-    }
+      console.log('PUT response status:', res.status);
+  console.log('PUT response data:', res.data);
+  setMessage('Profile updated successfully');
+  setUser({ ...user, ...formData });
+} catch (err) {
+  console.error('Error object:', err);
+  console.error('Response status:', err.response?.status);
+  console.error('Response data:', err.response?.data);
+  setMessage('Update failed');
+}
   };
 
   return (
