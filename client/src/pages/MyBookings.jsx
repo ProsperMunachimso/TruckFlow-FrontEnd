@@ -1,5 +1,6 @@
 // client/src/pages/MyBookings.jsx
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';   // FIXED import
 import API from '../services/api';
 
 const MyBookings = () => {
@@ -57,7 +58,6 @@ const MyBookings = () => {
   const saveEdit = async (id) => {
     try {
       const res = await API.put(`/api/bookings/${id}`, editData);
-      // Update the booking in the local state
       setBookings(bookings.map(b => b._id === id ? res.data : b));
       cancelEdit();
     } catch (err) {
@@ -72,7 +72,7 @@ const MyBookings = () => {
     <div className="my-bookings">
       <h2>My Bookings</h2>
       {bookings.length === 0 ? (
-        <p>You have no bookings yet. <a href="/bookings/new">Create one</a>.</p>
+        <p>You have no bookings yet. <Link to="/bookings/new">Create one</Link>.</p>
       ) : (
         <table className="bookings-table">
           <thead>
@@ -89,6 +89,7 @@ const MyBookings = () => {
             {bookings.map(booking => (
               <tr key={booking._id}>
                 {editingId === booking._id ? (
+                  // Edit row
                   <>
                     <td><input name="pickupLocation" value={editData.pickupLocation} onChange={handleEditChange} /></td>
                     <td><input name="deliveryLocation" value={editData.deliveryLocation} onChange={handleEditChange} /></td>
@@ -101,6 +102,7 @@ const MyBookings = () => {
                     </td>
                   </>
                 ) : (
+                  // Display row
                   <>
                     <td>{booking.pickupLocation}</td>
                     <td>{booking.deliveryLocation}</td>
@@ -108,6 +110,7 @@ const MyBookings = () => {
                     <td>{new Date(booking.pickupDate).toLocaleDateString()}</td>
                     <td>{booking.status}</td>
                     <td>
+                      <Link to={`/bookings/${booking._id}`}>View Details</Link>
                       <button onClick={() => startEdit(booking)} disabled={booking.status !== 'pending'}>Edit</button>
                       <button onClick={() => handleDelete(booking._id)} disabled={booking.status !== 'pending'}>Delete</button>
                     </td>

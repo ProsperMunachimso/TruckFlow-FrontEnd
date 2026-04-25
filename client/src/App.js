@@ -11,7 +11,7 @@ import Profile from './pages/Profile';
 import TransporterDashboard from './pages/TransporterDashboard';
 import CreateQuote from './pages/CreateQuote';
 import MyQuotes from './pages/MyQuotes';
-
+import BookingDetails from './pages/BookingDetails';
 function App() {
   return (
     <AuthProvider>
@@ -24,6 +24,7 @@ function App() {
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/bookings/new" element={<CreateBooking />} />
+            <Route path="/bookings/:id" element={<BookingDetails />} />
             <Route path="/bookings" element={<MyBookings />} />
             <Route path="/transporter-dashboard" element={<TransporterDashboard />} />
             <Route path="/quotes/new/:bookingId" element={<CreateQuote />} />
