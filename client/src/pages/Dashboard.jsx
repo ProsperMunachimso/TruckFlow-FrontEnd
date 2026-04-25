@@ -28,6 +28,13 @@ const Dashboard = () => {
           <>
             <Link to="/transporter-dashboard">Find Bookings to Quote</Link>
             <Link to="/my-quotes">My Quotes</Link>
+            <Link to="/invoices">My Invoices</Link>
+          </>
+        )}
+        {user?.role === 'labourer' && (
+          <>
+            <Link to="/labourer-dashboard">Available Labour Requests</Link>
+            <Link to="/my-labour">My Assignments</Link>
           </>
         )}
 
