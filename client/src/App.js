@@ -12,6 +12,11 @@ import TransporterDashboard from './pages/TransporterDashboard';
 import CreateQuote from './pages/CreateQuote';
 import MyQuotes from './pages/MyQuotes';
 import BookingDetails from './pages/BookingDetails';
+import LabourerDashboard from './pages/LabourerDashboard';
+import MyLabourAssignments from './pages/MyLabourAssignments';
+import Invoices from './pages/Invoices';
+import RateBooking from './pages/RateBooking';
+
 function App() {
   return (
     <AuthProvider>
@@ -29,6 +34,10 @@ function App() {
             <Route path="/transporter-dashboard" element={<TransporterDashboard />} />
             <Route path="/quotes/new/:bookingId" element={<CreateQuote />} />
             <Route path="/my-quotes" element={<MyQuotes />} />
+            <Route path="/labourer-dashboard" element={<LabourerDashboard />} />
+            <Route path="/my-labour" element={<MyLabourAssignments />} />
+            <Route path="/invoices" element={<Invoices />} />
+            <Route path="/rate-booking/:bookingId" element={<RateBooking />} />
           </Route>
         </Routes>
       </BrowserRouter>
