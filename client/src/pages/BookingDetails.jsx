@@ -1,6 +1,6 @@
 // client/src/pages/BookingDetails.jsx
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import API from '../services/api';
 
 const BookingDetails = () => {
@@ -8,20 +8,20 @@ const BookingDetails = () => {
   const navigate = useNavigate();
   const [booking, setBooking] = useState(null);
   const [quotes, setQuotes] = useState([]);
+  const [invoice, setInvoice] = useState(null);
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState('');
 
   useEffect(() => {
     fetchBookingAndQuotes();
+    fetchInvoice();
   }, [id]);
 
   const fetchBookingAndQuotes = async () => {
     try {
-      // Fetch the single booking
       const bookingRes = await API.get(`/api/bookings/${id}`);
       setBooking(bookingRes.data);
 
-      // Fetch all quotes and filter those belonging to this booking
       const quotesRes = await API.get('/api/quotes');
       const filtered = quotesRes.data.filter(q => q.booking?._id === id);
       setQuotes(filtered);
@@ -33,18 +33,50 @@ const BookingDetails = () => {
     }
   };
 
+  const fetchInvoice = async () => {
+    try {
+      const res = await API.get('/api/invoices');
+      const found = res.data.find(inv => inv.booking?._id === id);
+      setInvoice(found);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   const acceptQuote = async (quoteId) => {
     try {
       await API.put(`/api/quotes/${quoteId}/accept`);
       setMessage('Quote accepted! Booking confirmed.');
-      // Refresh to update booking status and quote list
       fetchBookingAndQuotes();
     } catch (err) {
       setMessage(err.response?.data?.message || 'Failed to accept quote');
     }
   };
 
-  if (loading) return <div className="loading">Loading booking details...</div>;
+  const generateInvoice = async () => {
+    const acceptedQuote = quotes.find(q => q.status === 'accepted');
+    if (!acceptedQuote) {
+      setMessage('No accepted quote found for this booking.');
+      return;
+    }
+    const totalAmount = acceptedQuote.amount;
+    const tax = totalAmount * 0.135; // 13.5% VAT
+    const grandTotal = totalAmount + tax;
+    try {
+      await API.post('/api/invoices', {
+        bookingId: id,
+        totalAmount,
+        tax,
+        grandTotal
+      });
+      setMessage('Invoice generated successfully!');
+      fetchInvoice(); // refresh invoice data
+    } catch (err) {
+      setMessage(err.response?.data?.message || 'Failed to generate invoice');
+    }
+  };
+
+  if (loading) return <div>Loading booking details...</div>;
   if (!booking) return <div className="error">Booking not found</div>;
 
   return (
@@ -54,7 +86,7 @@ const BookingDetails = () => {
       <p><strong>Delivery:</strong> {booking.deliveryLocation}</p>
       <p><strong>Weight:</strong> {booking.weightKg || 'N/A'} kg</p>
       <p><strong>Pickup Date:</strong> {new Date(booking.pickupDate).toLocaleString()}</p>
-      <p><strong>Status:</strong> <span className={`status-${booking.status}`}>{booking.status}</span></p>
+      <p><strong>Status:</strong> {booking.status}</p>
 
       {booking.status === 'pending' && (
         <div className="quotes-section">
@@ -82,13 +114,17 @@ const BookingDetails = () => {
       )}
 
       {booking.status === 'confirmed' && (
-        <p className="confirmed-message">This booking has been confirmed. Thank you!</p>
+        <div>
+          <p>This booking has been confirmed.</p>
+          {!invoice ? (
+            <button onClick={generateInvoice}>Generate Invoice</button>
+          ) : (
+            <p>Invoice already generated. <Link to="/invoices">View Invoices</Link></p>
+          )}
+        </div>
       )}
 
-      <button onClick={() => navigate('/bookings')} className="back-button">
-        Back to My Bookings
-      </button>
-
+      <button onClick={() => navigate('/bookings')}>Back to My Bookings</button>
       {message && <p className="info-message">{message}</p>}
     </div>
   );
