@@ -140,6 +140,7 @@ const CreateBooking = () => {
 
         <button type="submit">Submit Booking</button>
         {submitError && <p className="error api">{submitError}</p>}
+        <BackButton />
       </form>
     </div>
   );

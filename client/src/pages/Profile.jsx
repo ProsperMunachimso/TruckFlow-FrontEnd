@@ -1,7 +1,7 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import API from '../services/api';
-
+import BackButton from '../components/BackButton';
 const Profile = () => {
   const { user, setUser } = useContext(AuthContext);
   const [formData, setFormData] = useState({
@@ -67,6 +67,7 @@ const Profile = () => {
           />
         </div>
         <button type="submit">Update</button>
+        <BackButton />
       </form>
     </div>
   );

@@ -121,6 +121,7 @@ const MyBookings = () => {
           </tbody>
         </table>
       )}
+      <BackButton />
     </div>
   );
 };
