@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import API from '../services/api';
+import BackButton from '../components/BackButton';
 
 const TransporterDashboard = () => {
   const [bookings, setBookings] = useState([]);
@@ -59,6 +60,7 @@ const TransporterDashboard = () => {
           </tbody>
         </table>
       )}
+      <BackButton />
     </div>
   );
 };

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import API from '../services/api';
+import BackButton from '../components/BackButton';
 
 const CreateQuote = () => {
   const { bookingId } = useParams();
@@ -68,6 +69,7 @@ const CreateQuote = () => {
         </div>
         <button type="submit">Submit Quote</button>
         {submitError && <p className="error">{submitError}</p>}
+        <BackButton />
       </form>
     </div>
   );

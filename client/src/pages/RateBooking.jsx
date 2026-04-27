@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import API from '../services/api';
+import BackButton from '../components/BackButton';
 
 const RateBooking = () => {
   const { bookingId } = useParams();
@@ -69,6 +70,7 @@ const RateBooking = () => {
         </div>
         <button type="submit">Submit Rating</button>
         {message && <p>{message}</p>}
+        <BackButton />
       </form>
     </div>
   );

@@ -1,6 +1,7 @@
 // client/src/pages/MyLabourAssignments.jsx
 import React, { useState, useEffect } from 'react';
 import API from '../services/api';
+import BackButton from '../components/BackButton';
 
 const MyLabourAssignments = () => {
   const [assignments, setAssignments] = useState([]);
@@ -39,6 +40,7 @@ const MyLabourAssignments = () => {
           ))}
         </ul>
       )}
+      <BackButton />
     </div>
   );
 };

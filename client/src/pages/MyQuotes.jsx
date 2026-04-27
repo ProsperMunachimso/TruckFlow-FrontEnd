@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import API from '../services/api';
+import BackButton from '../components/BackButton';
 
 const MyQuotes = () => {
   const [quotes, setQuotes] = useState([]);
@@ -51,6 +52,7 @@ const MyQuotes = () => {
           </tbody>
         </table>
       )}
+      <BackButton />
     </div>
   );
 };

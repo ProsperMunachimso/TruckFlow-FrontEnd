@@ -1,6 +1,7 @@
 // client/src/pages/LabourerDashboard.jsx
 import React, { useState, useEffect } from 'react';
 import API from '../services/api';
+import BackButton from '../components/BackButton';
 
 const LabourerDashboard = () => {
   const [requests, setRequests] = useState([]);
@@ -55,6 +56,7 @@ const LabourerDashboard = () => {
           ))}
         </ul>
       )}
+      <BackButton />
     </div>
   );
 };

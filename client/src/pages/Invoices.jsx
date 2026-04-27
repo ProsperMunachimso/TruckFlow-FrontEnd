@@ -1,6 +1,7 @@
 // client/src/pages/Invoices.jsx
 import React, { useState, useEffect } from 'react';
 import API from '../services/api';
+import BackButton from '../components/BackButton';
 
 const Invoices = () => {
   const [invoices, setInvoices] = useState([]);
@@ -61,6 +62,7 @@ const Invoices = () => {
           </tbody>
         </table>
       )}
+      <BackButton />
     </div>
   );
 };
