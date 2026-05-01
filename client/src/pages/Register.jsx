@@ -1,6 +1,10 @@
 import React, { useState, useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
+import {
+  Container, Paper, TextField, Button, Typography, Box,
+  Select, MenuItem, FormControl, InputLabel, Alert
+} from '@mui/material';
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -20,6 +24,10 @@ const Register = () => {
     return newErrors;
   };
 
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const validationErrors = validate();
@@ -36,23 +44,78 @@ const Register = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <input name="name" placeholder="Name" value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} />
-      {errors.name && <span>{errors.name}</span>}
-      <input name="email" type="email" placeholder="Email" value={formData.email} onChange={(e) => setFormData({...formData, email: e.target.value})} />
-      {errors.email && <span>{errors.email}</span>}
-      <input name="password" type="password" placeholder="Password" value={formData.password} onChange={(e) => setFormData({...formData, password: e.target.value})} />
-      {errors.password && <span>{errors.password}</span>}
-      <input name="confirmPassword" type="password" placeholder="Confirm Password" value={formData.confirmPassword} onChange={(e) => setFormData({...formData, confirmPassword: e.target.value})} />
-      {errors.confirmPassword && <span>{errors.confirmPassword}</span>}
-      <select name="role" value={formData.role} onChange={(e) => setFormData({...formData, role: e.target.value})}>
-        <option value="client">Client</option>
-        <option value="transporter">Transporter</option>
-        <option value="labourer">Labourer</option>
-      </select>
-      <button type="submit">Register</button>
-      {errors.api && <p>{errors.api}</p>}
-    </form>
+    <Container maxWidth="sm" sx={{ mt: 8 }}>
+      <Paper elevation={3} sx={{ p: 4 }}>
+        <Typography variant="h4" gutterBottom align="center">
+          Register
+        </Typography>
+        <Box component="form" onSubmit={handleSubmit}>
+          <TextField
+            fullWidth
+            label="Name"
+            name="name"
+            margin="normal"
+            value={formData.name}
+            onChange={handleChange}
+            error={!!errors.name}
+            helperText={errors.name}
+          />
+          <TextField
+            fullWidth
+            label="Email"
+            name="email"
+            type="email"
+            margin="normal"
+            value={formData.email}
+            onChange={handleChange}
+            error={!!errors.email}
+            helperText={errors.email}
+          />
+          <TextField
+            fullWidth
+            label="Password"
+            name="password"
+            type="password"
+            margin="normal"
+            value={formData.password}
+            onChange={handleChange}
+            error={!!errors.password}
+            helperText={errors.password}
+          />
+          <TextField
+            fullWidth
+            label="Confirm Password"
+            name="confirmPassword"
+            type="password"
+            margin="normal"
+            value={formData.confirmPassword}
+            onChange={handleChange}
+            error={!!errors.confirmPassword}
+            helperText={errors.confirmPassword}
+          />
+          <FormControl fullWidth margin="normal">
+            <InputLabel>Role</InputLabel>
+            <Select
+              name="role"
+              value={formData.role}
+              label="Role"
+              onChange={handleChange}
+            >
+              <MenuItem value="client">Client</MenuItem>
+              <MenuItem value="transporter">Transporter</MenuItem>
+              <MenuItem value="labourer">Labourer</MenuItem>
+            </Select>
+          </FormControl>
+          {errors.api && <Alert severity="error" sx={{ mt: 2 }}>{errors.api}</Alert>}
+          <Button type="submit" variant="contained" fullWidth size="large" sx={{ mt: 3 }}>
+            Register
+          </Button>
+          <Typography align="center" sx={{ mt: 2 }}>
+            Already have an account? <Link to="/login">Login</Link>
+          </Typography>
+        </Box>
+      </Paper>
+    </Container>
   );
 };
 
