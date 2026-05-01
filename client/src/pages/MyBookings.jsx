@@ -1,15 +1,19 @@
-// client/src/pages/MyBookings.jsx
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';   // FIXED import
+import { Link } from 'react-router-dom';
+import { 
+  Table, TableHead, TableRow, TableCell, TableBody, Container, 
+  Typography, Button, IconButton, Paper, TableContainer,
+  CircularProgress, Alert
+} from '@mui/material';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+import VisibilityIcon from '@mui/icons-material/Visibility';
 import API from '../services/api';
-import BackButton from '../components/BackButton';
 
 const MyBookings = () => {
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [editingId, setEditingId] = useState(null);
-  const [editData, setEditData] = useState({});
 
   useEffect(() => {
     fetchBookings();
@@ -27,103 +31,71 @@ const MyBookings = () => {
   };
 
   const handleDelete = async (id) => {
-    if (window.confirm('Are you sure you want to delete this booking?')) {
+    if (window.confirm('Delete this booking?')) {
       try {
         await API.delete(`/api/bookings/${id}`);
         setBookings(bookings.filter(b => b._id !== id));
       } catch (err) {
-        alert(err.response?.data?.message || 'Delete failed');
+        alert('Delete failed');
       }
     }
   };
 
-  const startEdit = (booking) => {
-    setEditingId(booking._id);
-    setEditData({
-      pickupLocation: booking.pickupLocation,
-      deliveryLocation: booking.deliveryLocation,
-      weightKg: booking.weightKg || '',
-      specialInstructions: booking.specialInstructions || ''
-    });
-  };
-
-  const cancelEdit = () => {
-    setEditingId(null);
-    setEditData({});
-  };
-
-  const handleEditChange = (e) => {
-    setEditData({ ...editData, [e.target.name]: e.target.value });
-  };
-
-  const saveEdit = async (id) => {
-    try {
-      const res = await API.put(`/api/bookings/${id}`, editData);
-      setBookings(bookings.map(b => b._id === id ? res.data : b));
-      cancelEdit();
-    } catch (err) {
-      alert(err.response?.data?.message || 'Update failed');
-    }
-  };
-
-  if (loading) return <div>Loading bookings...</div>;
-  if (error) return <div className="error">{error}</div>;
+  if (loading) return <CircularProgress />;
+  if (error) return <Alert severity="error">{error}</Alert>;
 
   return (
-    <div className="my-bookings">
-      <h2>My Bookings</h2>
+    <Container maxWidth="lg" sx={{ mt: 4 }}>
+      <Typography variant="h4" gutterBottom>My Bookings</Typography>
       {bookings.length === 0 ? (
-        <p>You have no bookings yet. <Link to="/bookings/new">Create one</Link>.</p>
+        <Typography>You have no bookings. <Link to="/bookings/new">Create one</Link>.</Typography>
       ) : (
-        <table className="bookings-table">
-          <thead>
-            <tr>
-              <th>Pickup</th>
-              <th>Delivery</th>
-              <th>Weight (kg)</th>
-              <th>Date</th>
-              <th>Status</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {bookings.map(booking => (
-              <tr key={booking._id}>
-                {editingId === booking._id ? (
-                  // Edit row
-                  <>
-                    <td><input name="pickupLocation" value={editData.pickupLocation} onChange={handleEditChange} /></td>
-                    <td><input name="deliveryLocation" value={editData.deliveryLocation} onChange={handleEditChange} /></td>
-                    <td><input name="weightKg" type="number" value={editData.weightKg} onChange={handleEditChange} /></td>
-                    <td>{new Date(booking.pickupDate).toLocaleDateString()}</td>
-                    <td>{booking.status}</td>
-                    <td>
-                      <button onClick={() => saveEdit(booking._id)}>Save</button>
-                      <button onClick={cancelEdit}>Cancel</button>
-                    </td>
-                  </>
-                ) : (
-                  // Display row
-                  <>
-                    <td>{booking.pickupLocation}</td>
-                    <td>{booking.deliveryLocation}</td>
-                    <td>{booking.weightKg || '—'}</td>
-                    <td>{new Date(booking.pickupDate).toLocaleDateString()}</td>
-                    <td>{booking.status}</td>
-                    <td>
-                      <Link to={`/bookings/${booking._id}`}>View Details</Link>
-                      <button onClick={() => startEdit(booking)} disabled={booking.status !== 'pending'}>Edit</button>
-                      <button onClick={() => handleDelete(booking._id)} disabled={booking.status !== 'pending'}>Delete</button>
-                    </td>
-                  </>
-                )}
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <TableContainer component={Paper}>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>Pickup</TableCell>
+                <TableCell>Delivery</TableCell>
+                <TableCell>Weight (kg)</TableCell>
+                <TableCell>Date</TableCell>
+                <TableCell>Status</TableCell>
+                <TableCell>Actions</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {bookings.map(booking => (
+                <TableRow key={booking._id}>
+                  <TableCell>{booking.pickupLocation}</TableCell>
+                  <TableCell>{booking.deliveryLocation}</TableCell>
+                  <TableCell>{booking.weightKg || '—'}</TableCell>
+                  <TableCell>{new Date(booking.pickupDate).toLocaleDateString()}</TableCell>
+                  <TableCell>{booking.status}</TableCell>
+                  <TableCell>
+                    <IconButton component={Link} to={`/bookings/${booking._id}`} color="primary">
+                      <VisibilityIcon />
+                    </IconButton>
+                    <IconButton 
+                      disabled={booking.status !== 'pending'} 
+                      onClick={() => {/* open edit modal or navigate */}}
+                      color="secondary"
+                    >
+                      <EditIcon />
+                    </IconButton>
+                    <IconButton 
+                      disabled={booking.status !== 'pending'} 
+                      onClick={() => handleDelete(booking._id)}
+                      color="error"
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
       )}
-      <BackButton />
-    </div>
+    </Container>
   );
 };
 
