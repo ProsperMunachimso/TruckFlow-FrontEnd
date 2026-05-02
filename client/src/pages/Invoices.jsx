@@ -1,5 +1,5 @@
-// client/src/pages/Invoices.jsx
 import React, { useState, useEffect } from 'react';
+import { Container, Paper, Typography, Table, TableHead, TableRow, TableCell, TableBody, Button, CircularProgress, Alert } from '@mui/material';
 import API from '../services/api';
 import BackButton from '../components/BackButton';
 
@@ -25,45 +25,53 @@ const Invoices = () => {
   const payInvoice = async (id) => {
     try {
       await API.put(`/api/invoices/${id}/pay`);
-      // update status locally
       setInvoices(invoices.map(inv => inv._id === id ? { ...inv, paymentStatus: 'paid' } : inv));
     } catch (err) {
       alert('Payment failed');
     }
   };
 
-  if (loading) return <div>Loading invoices...</div>;
+  if (loading) return <CircularProgress sx={{ display: 'block', mx: 'auto', mt: 4 }} />;
 
   return (
-    <div>
-      <h2>My Invoices</h2>
-      {invoices.length === 0 ? (
-        <p>No invoices yet.</p>
-      ) : (
-        <table className="bookings-table">
-          <thead>
-            <tr><th>Booking</th><th>Total</th><th>Tax</th><th>Grand Total</th><th>Status</th><th>Action</th></tr>
-          </thead>
-          <tbody>
-            {invoices.map(inv => (
-              <tr key={inv._id}>
-                <td>{inv.booking?.pickupLocation} → {inv.booking?.deliveryLocation}</td>
-                <td>€{inv.totalAmount}</td>
-                <td>€{inv.tax}</td>
-                <td>€{inv.grandTotal}</td>
-                <td>{inv.paymentStatus}</td>
-                <td>
-                  {inv.paymentStatus === 'pending' && (
-                    <button onClick={() => payInvoice(inv._id)}>Pay Now</button>
-                  )}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      )}
-      <BackButton />
-    </div>
+    <Container maxWidth="lg" sx={{ mt: 4 }}>
+      <Paper sx={{ p: 3 }}>
+        <Typography variant="h4" gutterBottom>My Invoices</Typography>
+        {invoices.length === 0 ? (
+          <Typography>No invoices yet.</Typography>
+        ) : (
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>Booking</TableCell>
+                <TableCell>Total</TableCell>
+                <TableCell>Tax</TableCell>
+                <TableCell>Grand Total</TableCell>
+                <TableCell>Status</TableCell>
+                <TableCell>Action</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {invoices.map(inv => (
+                <TableRow key={inv._id}>
+                  <TableCell>{inv.booking?.pickupLocation} → {inv.booking?.deliveryLocation}</TableCell>
+                  <TableCell>€{inv.totalAmount}</TableCell>
+                  <TableCell>€{inv.tax}</TableCell>
+                  <TableCell>€{inv.grandTotal}</TableCell>
+                  <TableCell>{inv.paymentStatus}</TableCell>
+                  <TableCell>
+                    {inv.paymentStatus === 'pending' && (
+                      <Button variant="contained" size="small" onClick={() => payInvoice(inv._id)}>Pay Now</Button>
+                    )}
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        )}
+        <BackButton />
+      </Paper>
+    </Container>
   );
 };
 
