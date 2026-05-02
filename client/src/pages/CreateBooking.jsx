@@ -1,37 +1,32 @@
-// client/src/pages/CreateBooking.jsx
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import {
+  Container, Paper, Typography, TextField, Button, Box,
+  FormControlLabel, Checkbox, Grid, Alert
+} from '@mui/material';
 import API from '../services/api';
 import BackButton from '../components/BackButton';
 
 const CreateBooking = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    pickupLocation: '',
-    deliveryLocation: '',
-    cargoType: '',
-    weightKg: '',
+    pickupLocation: '', deliveryLocation: '', cargoType: '', weightKg: '',
     dimensions: { length: '', width: '', height: '' },
-    pickupDate: '',
-    needLoadingAssistance: false,
-    needUnloadingAssistance: false,
+    pickupDate: '', needLoadingAssistance: false, needUnloadingAssistance: false,
     specialInstructions: ''
   });
   const [errors, setErrors] = useState({});
   const [submitError, setSubmitError] = useState('');
 
-  // Client‑side validation
   const validate = () => {
     const newErrors = {};
-    if (!formData.pickupLocation) newErrors.pickupLocation = 'Pickup location is required';
-    if (!formData.deliveryLocation) newErrors.deliveryLocation = 'Delivery location is required';
+    if (!formData.pickupLocation) newErrors.pickupLocation = 'Pickup is required';
+    if (!formData.deliveryLocation) newErrors.deliveryLocation = 'Delivery is required';
     if (!formData.pickupDate) newErrors.pickupDate = 'Pickup date is required';
-    if (formData.weightKg && (formData.weightKg <= 0 || formData.weightKg > 50000)) {
-      newErrors.weightKg = 'Weight must be between 1 and 50000 kg';
-    }
-    if (formData.dimensions.length && (formData.dimensions.length <= 0 || formData.dimensions.length > 1000)) {
-      newErrors.dimensions = 'Dimensions must be positive numbers (max 1000 cm)';
-    }
+    if (formData.weightKg && (formData.weightKg <= 0 || formData.weightKg > 50000))
+      newErrors.weightKg = 'Weight must be 1-50000 kg';
+    if (formData.dimensions.length && (formData.dimensions.length <= 0 || formData.dimensions.length > 1000))
+      newErrors.dimensions = 'Dimensions must be positive <=1000 cm';
     return newErrors;
   };
 
@@ -57,10 +52,8 @@ const CreateBooking = () => {
       setErrors(validationErrors);
       return;
     }
-    setErrors({});
     setSubmitError('');
     try {
-      // Convert weight and dimensions to numbers before sending
       const payload = {
         ...formData,
         weightKg: formData.weightKg ? Number(formData.weightKg) : undefined,
@@ -71,79 +64,56 @@ const CreateBooking = () => {
         }
       };
       await API.post('/api/bookings', payload);
-      navigate('/bookings'); // redirect to list of bookings
+      navigate('/bookings');
     } catch (err) {
       setSubmitError(err.response?.data?.message || 'Failed to create booking');
     }
   };
 
   return (
-    <div className="create-booking">
-      <h2>Create a New Booking</h2>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Pickup Location *</label>
-          <input name="pickupLocation" value={formData.pickupLocation} onChange={handleChange} />
-          {errors.pickupLocation && <span className="error">{errors.pickupLocation}</span>}
-        </div>
-
-        <div>
-          <label>Delivery Location *</label>
-          <input name="deliveryLocation" value={formData.deliveryLocation} onChange={handleChange} />
-          {errors.deliveryLocation && <span className="error">{errors.deliveryLocation}</span>}
-        </div>
-
-        <div>
-          <label>Cargo Type</label>
-          <input name="cargoType" value={formData.cargoType} onChange={handleChange} placeholder="e.g., Palletized, Liquid, Fragile" />
-        </div>
-
-        <div>
-          <label>Weight (kg)</label>
-          <input name="weightKg" type="number" value={formData.weightKg} onChange={handleChange} />
-          {errors.weightKg && <span className="error">{errors.weightKg}</span>}
-        </div>
-
-        <div>
-          <label>Dimensions (cm)</label>
-          <div style={{ display: 'flex', gap: '8px' }}>
-            <input name="dimensions.length" placeholder="Length" value={formData.dimensions.length} onChange={handleChange} />
-            <input name="dimensions.width" placeholder="Width" value={formData.dimensions.width} onChange={handleChange} />
-            <input name="dimensions.height" placeholder="Height" value={formData.dimensions.height} onChange={handleChange} />
-          </div>
-          {errors.dimensions && <span className="error">{errors.dimensions}</span>}
-        </div>
-
-        <div>
-          <label>Pickup Date & Time *</label>
-          <input name="pickupDate" type="datetime-local" value={formData.pickupDate} onChange={handleChange} />
-          {errors.pickupDate && <span className="error">{errors.pickupDate}</span>}
-        </div>
-
-        <div>
-          <label>
-            <input name="needLoadingAssistance" type="checkbox" checked={formData.needLoadingAssistance} onChange={handleChange} />
-            Need loading assistance?
-          </label>
-        </div>
-
-        <div>
-          <label>
-            <input name="needUnloadingAssistance" type="checkbox" checked={formData.needUnloadingAssistance} onChange={handleChange} />
-            Need unloading assistance?
-          </label>
-        </div>
-
-        <div>
-          <label>Special Instructions</label>
-          <textarea name="specialInstructions" value={formData.specialInstructions} onChange={handleChange} rows="3" />
-        </div>
-
-        <button type="submit">Submit Booking</button>
-        {submitError && <p className="error api">{submitError}</p>}
-        <BackButton />
-      </form>
-    </div>
+    <Container maxWidth="md" sx={{ mt: 4 }}>
+      <Paper elevation={3} sx={{ p: 4 }}>
+        <Typography variant="h4" gutterBottom>Create a New Booking</Typography>
+        <Box component="form" onSubmit={handleSubmit}>
+          <Grid container spacing={2}>
+            <Grid item xs={12} sm={6}>
+              <TextField fullWidth label="Pickup Location *" name="pickupLocation" value={formData.pickupLocation} onChange={handleChange} error={!!errors.pickupLocation} helperText={errors.pickupLocation} />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField fullWidth label="Delivery Location *" name="deliveryLocation" value={formData.deliveryLocation} onChange={handleChange} error={!!errors.deliveryLocation} helperText={errors.deliveryLocation} />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField fullWidth label="Cargo Type" name="cargoType" value={formData.cargoType} onChange={handleChange} placeholder="e.g., Palletized" />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField fullWidth label="Weight (kg)" name="weightKg" type="number" value={formData.weightKg} onChange={handleChange} error={!!errors.weightKg} helperText={errors.weightKg} />
+            </Grid>
+            <Grid item xs={12}>
+              <Typography variant="subtitle1">Dimensions (cm)</Typography>
+              <Grid container spacing={1}>
+                <Grid item xs={4}><TextField fullWidth label="Length" name="dimensions.length" value={formData.dimensions.length} onChange={handleChange} /></Grid>
+                <Grid item xs={4}><TextField fullWidth label="Width" name="dimensions.width" value={formData.dimensions.width} onChange={handleChange} /></Grid>
+                <Grid item xs={4}><TextField fullWidth label="Height" name="dimensions.height" value={formData.dimensions.height} onChange={handleChange} /></Grid>
+              </Grid>
+              {errors.dimensions && <Typography color="error">{errors.dimensions}</Typography>}
+            </Grid>
+            <Grid item xs={12}>
+              <TextField fullWidth label="Pickup Date & Time *" name="pickupDate" type="datetime-local" InputLabelProps={{ shrink: true }} value={formData.pickupDate} onChange={handleChange} error={!!errors.pickupDate} helperText={errors.pickupDate} />
+            </Grid>
+            <Grid item xs={12}>
+              <FormControlLabel control={<Checkbox name="needLoadingAssistance" checked={formData.needLoadingAssistance} onChange={handleChange} />} label="Need loading assistance?" />
+              <FormControlLabel control={<Checkbox name="needUnloadingAssistance" checked={formData.needUnloadingAssistance} onChange={handleChange} />} label="Need unloading assistance?" />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField fullWidth label="Special Instructions" name="specialInstructions" multiline rows={3} value={formData.specialInstructions} onChange={handleChange} />
+            </Grid>
+          </Grid>
+          {submitError && <Alert severity="error" sx={{ mt: 2 }}>{submitError}</Alert>}
+          <Button type="submit" variant="contained" fullWidth size="large" sx={{ mt: 3 }}>Submit Booking</Button>
+          <BackButton />
+        </Box>
+      </Paper>
+    </Container>
   );
 };
 

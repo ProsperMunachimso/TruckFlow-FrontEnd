@@ -1,15 +1,14 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { AuthContext } from '../context/AuthContext';
+import { Container, Paper, Typography, TextField, Button, Box, Alert } from '@mui/material';
 import API from '../services/api';
 import BackButton from '../components/BackButton';
+
 const Profile = () => {
   const { user, setUser } = useContext(AuthContext);
-  const [formData, setFormData] = useState({
-    name: '',
-    phone: '',
-    address: '',
-  });
+  const [formData, setFormData] = useState({ name: '', phone: '', address: '' });
   const [message, setMessage] = useState('');
+  const [error, setError] = useState('');
 
   useEffect(() => {
     if (user) {
@@ -21,55 +20,38 @@ const Profile = () => {
     }
   }, [user]);
 
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError('');
     try {
       const res = await API.put('/api/users/profile', formData);
-      console.log('PUT response status:', res.status);
-  console.log('PUT response data:', res.data);
-  setMessage('Profile updated successfully');
-  setUser({ ...user, ...formData });
-} catch (err) {
-  console.error('Error object:', err);
-  console.error('Response status:', err.response?.status);
-  console.error('Response data:', err.response?.data);
-  setMessage('Update failed');
-}
+      setMessage('Profile updated successfully');
+      setUser({ ...user, ...formData });
+      setTimeout(() => setMessage(''), 3000);
+    } catch (err) {
+      setError(err.response?.data?.message || 'Update failed');
+    }
   };
 
   return (
-    <div>
-      <h2>My Profile</h2>
-      {message && <p>{message}</p>}
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Name</label>
-          <input
-            type="text"
-            value={formData.name}
-            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-          />
-        </div>
-        <div>
-          <label>Phone</label>
-          <input
-            type="text"
-            value={formData.phone}
-            onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-          />
-        </div>
-        <div>
-          <label>Address</label>
-          <input
-            type="text"
-            value={formData.address}
-            onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-          />
-        </div>
-        <button type="submit">Update</button>
-        <BackButton />
-      </form>
-    </div>
+    <Container maxWidth="sm" sx={{ mt: 4 }}>
+      <Paper elevation={3} sx={{ p: 4 }}>
+        <Typography variant="h4" gutterBottom>My Profile</Typography>
+        <Box component="form" onSubmit={handleSubmit}>
+          <TextField fullWidth label="Name" name="name" margin="normal" value={formData.name} onChange={handleChange} />
+          <TextField fullWidth label="Phone" name="phone" margin="normal" value={formData.phone} onChange={handleChange} />
+          <TextField fullWidth label="Address" name="address" margin="normal" value={formData.address} onChange={handleChange} />
+          {message && <Alert severity="success" sx={{ mt: 2 }}>{message}</Alert>}
+          {error && <Alert severity="error" sx={{ mt: 2 }}>{error}</Alert>}
+          <Button type="submit" variant="contained" fullWidth size="large" sx={{ mt: 2 }}>Update</Button>
+          <BackButton />
+        </Box>
+      </Paper>
+    </Container>
   );
 };
 
