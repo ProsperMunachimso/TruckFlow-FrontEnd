@@ -1,6 +1,10 @@
-// client/src/pages/RateBooking.jsx
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import {
+  Container, Paper, Typography, TextField, Button, Box,
+  Rating, Alert, CircularProgress
+} from '@mui/material';
+import { Star } from '@mui/icons-material';
 import API from '../services/api';
 import BackButton from '../components/BackButton';
 
@@ -12,6 +16,7 @@ const RateBooking = () => {
   const [stars, setStars] = useState(5);
   const [comment, setComment] = useState('');
   const [message, setMessage] = useState('');
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetchBooking();
@@ -21,13 +26,13 @@ const RateBooking = () => {
     try {
       const res = await API.get(`/api/bookings/${bookingId}`);
       setBooking(res.data);
-      // Extract transporter ID from selectedQuote
       if (res.data.selectedQuote?.transporter) {
         setTransporterId(res.data.selectedQuote.transporter);
       }
     } catch (err) {
-      console.error(err);
       setMessage('Failed to load booking');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -38,12 +43,7 @@ const RateBooking = () => {
       return;
     }
     try {
-      await API.post('/api/ratings', {
-        bookingId,
-        toUserId: transporterId,
-        stars,
-        comment
-      });
+      await API.post('/api/ratings', { bookingId, toUserId: transporterId, stars, comment });
       setMessage('Rating submitted!');
       setTimeout(() => navigate('/bookings'), 2000);
     } catch (err) {
@@ -51,28 +51,44 @@ const RateBooking = () => {
     }
   };
 
-  if (!booking) return <div>Loading...</div>;
+  if (loading) return <CircularProgress sx={{ display: 'block', mx: 'auto', mt: 4 }} />;
+  if (!booking) return <Alert severity="error">Booking not found</Alert>;
 
   return (
-    <div>
-      <h2>Rate the Transporter</h2>
-      <p>Booking: {booking.pickupLocation} → {booking.deliveryLocation}</p>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Stars (1-5)</label>
-          <select value={stars} onChange={(e) => setStars(parseInt(e.target.value))}>
-            {[1,2,3,4,5].map(s => <option key={s} value={s}>{s}</option>)}
-          </select>
-        </div>
-        <div>
-          <label>Comment (optional)</label>
-          <textarea value={comment} onChange={(e) => setComment(e.target.value)} rows="3" />
-        </div>
-        <button type="submit">Submit Rating</button>
-        {message && <p>{message}</p>}
-        <BackButton />
-      </form>
-    </div>
+    <Container maxWidth="sm" sx={{ mt: 4 }}>
+      <Paper elevation={3} sx={{ p: 4 }}>
+        <Typography variant="h4" gutterBottom>Rate the Transporter</Typography>
+        <Typography variant="subtitle1" gutterBottom>
+          Booking: {booking.pickupLocation} → {booking.deliveryLocation}
+        </Typography>
+        <Box component="form" onSubmit={handleSubmit} sx={{ mt: 2 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+            <Typography component="legend">Stars: </Typography>
+            <Rating
+              name="stars"
+              value={stars}
+              onChange={(e, newValue) => setStars(newValue)}
+              icon={<Star fontSize="inherit" />}
+              sx={{ ml: 2 }}
+            />
+          </Box>
+          <TextField
+            fullWidth
+            label="Comment (optional)"
+            multiline
+            rows={3}
+            value={comment}
+            onChange={(e) => setComment(e.target.value)}
+            margin="normal"
+          />
+          {message && <Alert severity="info" sx={{ mt: 2 }}>{message}</Alert>}
+          <Button type="submit" variant="contained" fullWidth size="large" sx={{ mt: 2 }}>
+            Submit Rating
+          </Button>
+          <BackButton />
+        </Box>
+      </Paper>
+    </Container>
   );
 };
 
