@@ -3,11 +3,12 @@ import { AuthContext } from '../context/AuthContext';
 import { Link } from 'react-router-dom';
 import {
   Container, Paper, Typography, Grid, Card, CardContent,
-  Button, Box, Avatar, Divider
+  Button, Box, Avatar, Divider, Chip
 } from '@mui/material';
 import {
   LocalShipping, RateReview, Assignment, Person,
-  Inventory, Receipt, Build, Dashboard as DashboardIcon
+  Inventory, Receipt, Build, Dashboard as DashboardIcon,
+  Logout
 } from '@mui/icons-material';
 
 const Dashboard = () => {
@@ -18,7 +19,7 @@ const Dashboard = () => {
     window.location.href = '/';
   };
 
-  // Role-based quick action cards
+  // Role‑based quick actions
   const clientActions = [
     { title: 'Create a Booking', link: '/bookings/new', icon: <LocalShipping />, color: 'primary' },
     { title: 'My Bookings', link: '/bookings', icon: <Inventory />, color: 'secondary' },
@@ -45,6 +46,7 @@ const Dashboard = () => {
   return (
     <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
       <Paper elevation={3} sx={{ p: 3 }}>
+        {/* Welcome header */}
         <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
           <Avatar sx={{ bgcolor: 'primary.main', mr: 2 }}>
             <DashboardIcon />
@@ -52,17 +54,34 @@ const Dashboard = () => {
           <Typography variant="h4">Welcome, {user?.name}!</Typography>
         </Box>
         <Divider sx={{ mb: 3 }} />
-        <Grid container spacing={2}>
-          <Grid item xs={12} md={6}>
-            <Card variant="outlined">
+
+        <Grid container spacing={3}>
+          {/* User info card */}
+          <Grid item xs={12} md={5}>
+            <Card variant="outlined" sx={{ height: '100%' }}>
               <CardContent>
-                <Typography variant="subtitle1"><strong>Role:</strong> {user?.role}</Typography>
-                <Typography variant="subtitle1"><strong>Email:</strong> {user?.email}</Typography>
+                <Typography variant="h6" gutterBottom>Account Information</Typography>
+                <Box sx={{ mb: 1 }}>
+                  <Chip label={`Role: ${user?.role}`} color="primary" size="small" sx={{ mr: 1 }} />
+                  <Chip label={`Email: ${user?.email}`} variant="outlined" size="small" />
+                </Box>
+                <Button
+                  component={Link}
+                  to="/profile"
+                  variant="outlined"
+                  startIcon={<Person />}
+                  fullWidth
+                  sx={{ mt: 2 }}
+                >
+                  Edit Profile
+                </Button>
               </CardContent>
             </Card>
           </Grid>
-          <Grid item xs={12} md={6}>
-            <Card variant="outlined">
+
+          {/* Quick actions card */}
+          <Grid item xs={12} md={7}>
+            <Card variant="outlined" sx={{ height: '100%' }}>
               <CardContent>
                 <Typography variant="h6" gutterBottom>Quick Actions</Typography>
                 <Grid container spacing={1}>
@@ -75,7 +94,7 @@ const Dashboard = () => {
                         startIcon={action.icon}
                         color={action.color}
                         fullWidth
-                        sx={{ justifyContent: 'flex-start', mb: 1 }}
+                        sx={{ justifyContent: 'flex-start', py: 1 }}
                       >
                         {action.title}
                       </Button>
@@ -86,21 +105,15 @@ const Dashboard = () => {
             </Card>
           </Grid>
         </Grid>
+
+        {/* Logout button */}
         <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3 }}>
           <Button
-            component={Link}
-            to="/profile"
             variant="contained"
-            startIcon={<Person />}
-            sx={{ mr: 2 }}
-          >
-            My Profile
-          </Button>
-          <Button
-            variant="outlined"
             color="error"
+            startIcon={<Logout />}
             onClick={handleLogout}
-            startIcon={<Person />}
+            sx={{ minWidth: 200 }}
           >
             Logout
           </Button>
