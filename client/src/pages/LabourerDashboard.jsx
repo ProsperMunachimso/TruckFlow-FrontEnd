@@ -9,13 +9,8 @@ import { Work, AssignmentTurnedIn, CheckCircle, PersonAdd } from '@mui/icons-mat
 import API from '../services/api';
 
 const LabourerDashboard = () => {
-  const [pendingRequests, setPendingRequests] = useState([]);
-  const [myAssignments, setMyAssignments] = useState([]);
-  const [metrics, setMetrics] = useState({
-    pending: 0,
-    assigned: 0,
-    completed: 0
-  });
+  const [availableRequests, setAvailableRequests] = useState([]);
+  const [assignedRequests, setAssignedRequests] = useState([]);
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState('');
 
@@ -25,39 +20,13 @@ const LabourerDashboard = () => {
 
   const fetchData = async () => {
     try {
-      const [pendingRes, assignedRes] = await Promise.all([
-        API.get('/api/labour'), // returns pending (unassigned) requests for labourer? Wait, your backend returns pending: { status: 'pending', labourer: null }
-        API.get('/api/labour/my')   // if you created endpoint for labourer's own assignments, otherwise reuse and filter
-      ]);
-      // For pending: we call /api/labour?filter=available (or simply pending). Adjust based on your backend.
-      // Assuming /api/labour returns all pending (labourer sees available)
-      let pending = [];
-      try {
-        const res = await API.get('/api/labour');
-        pending = res.data.filter(req => req.status === 'pending' && !req.labourer);
-      } catch(e) { console.error(e); }
-      setPendingRequests(pending);
+        // Available requests (pending, unassigned)
+        const availableRes = await API.get('/api/labour?filter=available');
+        setAvailableRequests(availableRes.data);
 
-      // For assigned: you may have endpoint /api/labour/my (we created earlier). Use that or fallback.
-      let assigned = [];
-      try {
-        const res2 = await API.get('/api/labour/my');
-        assigned = res2.data;
-      } catch(e) {
-        // fallback: filter from all labour requests where labourer matches logged in user
-        const all = await API.get('/api/labour');
-        assigned = all.data.filter(req => req.labourer?._id === req.user?._id); // incomplete, better to have dedicated endpoint
-      }
-      setMyAssignments(assigned);
-
-      const pendingCount = pending.length;
-      const assignedCount = assigned.filter(a => a.status === 'assigned').length;
-      const completedCount = assigned.filter(a => a.status === 'completed').length;
-      setMetrics({
-        pending: pendingCount,
-        assigned: assignedCount,
-        completed: completedCount
-      });
+        // Assigned requests (to this labourer)
+        const assignedRes = await API.get('/api/labour?filter=assigned');
+        setAssignedRequests(assignedRes.data);
     } catch (err) {
       console.error(err);
       setMessage('Failed to load data');
@@ -70,11 +39,16 @@ const LabourerDashboard = () => {
     try {
       await API.put(`/api/labour/${requestId}/assign`);
       setMessage('Assigned successfully!');
-      fetchData(); // refresh
+      fetchData(); // refresh both lists
     } catch (err) {
       setMessage(err.response?.data?.message || 'Assignment failed');
     }
   };
+
+  // Calculate metrics
+  const pendingCount = availableRequests.length;
+  const assignedCount = assignedRequests.filter(req => req.status === 'assigned').length;
+  const completedCount = assignedRequests.filter(req => req.status === 'completed').length;
 
   if (loading) return <CircularProgress sx={{ display: 'block', mx: 'auto', mt: 4 }} />;
 
@@ -94,7 +68,7 @@ const LabourerDashboard = () => {
             <CardContent>
               <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <Work color="secondary" sx={{ fontSize: 40 }} />
-                <Typography variant="h4">{metrics.pending}</Typography>
+                <Typography variant="h4">{pendingCount}</Typography>
               </Box>
               <Typography variant="subtitle2" color="text.secondary">Available Requests</Typography>
             </CardContent>
@@ -105,7 +79,7 @@ const LabourerDashboard = () => {
             <CardContent>
               <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <AssignmentTurnedIn color="primary" sx={{ fontSize: 40 }} />
-                <Typography variant="h4">{metrics.assigned}</Typography>
+                <Typography variant="h4">{assignedCount}</Typography>
               </Box>
               <Typography variant="subtitle2" color="text.secondary">Assigned Jobs</Typography>
             </CardContent>
@@ -116,7 +90,7 @@ const LabourerDashboard = () => {
             <CardContent>
               <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <CheckCircle color="success" sx={{ fontSize: 40 }} />
-                <Typography variant="h4">{metrics.completed}</Typography>
+                <Typography variant="h4">{completedCount}</Typography>
               </Box>
               <Typography variant="subtitle2" color="text.secondary">Completed</Typography>
             </CardContent>
@@ -131,17 +105,18 @@ const LabourerDashboard = () => {
       <Button
         variant="contained"
         startIcon={<PersonAdd />}
-        onClick={() => window.location.href = '/labourer-dashboard-available'} // or link to a dedicated page for available requests
+        component="a"
+        href="/my-labour"
         sx={{ mb: 4 }}
       >
-        View Available Requests
+        View My Assignments
       </Button>
 
       <Divider sx={{ my: 2 }} />
 
-      {/* Pending Labour Requests (Available) */}
+      {/* Available Requests */}
       <Typography variant="h5" gutterBottom>Available Requests</Typography>
-      {pendingRequests.length === 0 ? (
+      {availableRequests.length === 0 ? (
         <Typography>No pending requests at the moment.</Typography>
       ) : (
         <Table>
@@ -155,7 +130,7 @@ const LabourerDashboard = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {pendingRequests.map(req => (
+            {availableRequests.map(req => (
               <TableRow key={req._id}>
                 <TableCell>{req.booking?.pickupLocation} → {req.booking?.deliveryLocation}</TableCell>
                 <TableCell>{req.type}</TableCell>
@@ -176,7 +151,7 @@ const LabourerDashboard = () => {
 
       {/* Recent Assignments */}
       <Typography variant="h5" gutterBottom>My Recent Assignments</Typography>
-      {myAssignments.length === 0 ? (
+      {assignedRequests.length === 0 ? (
         <Typography>No assignments yet.</Typography>
       ) : (
         <Table>
@@ -188,12 +163,12 @@ const LabourerDashboard = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {myAssignments.slice(0, 5).map(req => (
+            {assignedRequests.slice(0, 5).map(req => (
               <TableRow key={req._id}>
                 <TableCell>{req.booking?.pickupLocation} → {req.booking?.deliveryLocation}</TableCell>
                 <TableCell>{req.type}</TableCell>
                 <TableCell>
-                  <Chip label={req.status} color={req.status === 'assigned' ? 'primary' : (req.status === 'completed' ? 'success' : 'default')} />
+                  <Chip label={req.status} color={req.status === 'assigned' ? 'primary' : 'success'} />
                 </TableCell>
               </TableRow>
             ))}
