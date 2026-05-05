@@ -60,6 +60,14 @@ All validation errors are shown inline (helperText or Alert), preventing submiss
 - Consistent spacing using `sx={{ py: 4, px: 2 }}` etc.
 - No custom CSS files – all inline via MUI `sx` or theme overrides.
 
+## How the UI Interacts with Backend API
+- All API calls go through `services/api.js` with `baseURL` from `REACT_APP_API_URL`.
+- Authentication uses HTTP‑only cookies (JWT) – automatically sent with `withCredentials: true`.
+- **Client triggers:** Register, login, create booking, update/delete booking, accept quote, generate invoice, pay invoice, rate transporter.
+- **Transporter triggers:** View pending bookings, submit quote, view my quotes.
+- **Labourer triggers:** View available requests, assign self, view assigned jobs.
+- **Error/success messages** displayed via MUI `Alert` components (e.g., “Booking created”, “Update failed”).
+
 ## Deployment
 - **Frontend** (React): Deployed on Render as a Static Site.
   - Live URL: `https://truckflow-frontend.onrender.com`
@@ -85,15 +93,19 @@ REACT_APP_CLIENT_URL=http://localhost:3000
 - **Vitor (20%)** – Labourer and transporter flows, quotes, labour assignment, backend integration for labour endpoints.
 - **Chibuike (35%)** – UI/UX design with Material UI, responsive layout, static pages (Services, About, Contact, Terms), deployment, README.
 
-## References & Third‑Party Resources
-- [Material UI Documentation](https://mui.com/)
-- [React Router v6](https://reactrouter.com/)
-- [Axios](https://axios-http.com/)
-- [Render Static Site Deployment Guide](https://render.com/docs/static-sites)
-- Tutorials: MUI grid system, responsive typography.
-
-
 ## Known Limitations / Future Enhancements
 - Reject Quote button not implemented (planned).
 - Labour request auto‑creation works only for new bookings (needs backend update for existing bookings).
 - Real‑time GPS tracking deferred to future version.
+
+## Changes from Assignment 1 (Project Proposal)
+- Real‑time GPS tracking not implemented (deferred).
+- Labour request creation simplified – auto‑created when client checks assistance.
+- Payment gateway simulated (no Stripe integration).
+- Added many static pages (Services, About, Contact, Terms) – not originally planned.
+
+## References & Third‑Party Resources
+- [Material UI Documentation](https://mui.com/)
+- [Axios](https://axios-http.com/)
+- [Render Static Site Deployment Guide](https://render.com/docs/static-sites)
+- Tutorials: MUI grid system, responsive typography.
