@@ -9,10 +9,10 @@ const BackButton = () => {
     <Button
       variant="outlined"
       startIcon={<ArrowBackIcon />}
-      onClick={() => navigate('/dashboard')}
+      onClick={() => navigate(-1)}
       sx={{ mt: 2 }}
     >
-      Back to Dashboard
+      Back
     </Button>
   );
 };
