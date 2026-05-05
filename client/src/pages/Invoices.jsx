@@ -71,6 +71,7 @@ const Invoices = () => {
         )}
         <BackButton />
       </Paper>
+      <BackButton />
     </Container>
   );
 };

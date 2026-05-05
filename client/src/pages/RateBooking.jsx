@@ -88,6 +88,7 @@ const RateBooking = () => {
           <BackButton />
         </Box>
       </Paper>
+      <BackButton />
     </Container>
   );
 };

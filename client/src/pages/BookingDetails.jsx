@@ -234,7 +234,7 @@ const BookingDetails = () => {
         {/* Invoice section */}
         {booking.status === 'confirmed' && (
           <Box sx={{ mt: 4, textAlign: 'center' }}>
-            <Typography variant="h6" gutterBottom>Booking Confirmed ✅</Typography>
+            <Typography variant="h6" gutterBottom>Booking Confirmed </Typography>
             {!invoice ? (
               <Button variant="contained" color="secondary" onClick={generateInvoice} startIcon={<Receipt />}>
                 Generate Invoice
@@ -260,6 +260,7 @@ const BookingDetails = () => {
         </Box>
 
         {message && <Alert severity="info" sx={{ mt: 2 }}>{message}</Alert>}
+        <BackButton />
       </Paper>
     </Container>
   );

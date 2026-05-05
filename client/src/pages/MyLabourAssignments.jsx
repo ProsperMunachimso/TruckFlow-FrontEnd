@@ -67,6 +67,7 @@ const MyLabourAssignments = () => {
         )}
         <BackButton />
       </Paper>
+      <BackButton />
     </Container>
   );
 };

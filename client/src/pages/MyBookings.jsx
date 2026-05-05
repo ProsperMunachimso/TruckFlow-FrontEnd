@@ -182,6 +182,7 @@ const MyBookings = () => {
           </Table>
         </TableContainer>
       )}
+      <BackButton />
     </Container>
   );
 };
