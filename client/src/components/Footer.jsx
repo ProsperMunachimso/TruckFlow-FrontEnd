@@ -21,6 +21,7 @@ const Footer = () => {
               <Link to="/services" style={{ color: '#ccc', textDecoration: 'none' }}>Services</Link>
               <Link to="/about" style={{ color: '#ccc', textDecoration: 'none' }}>About Us</Link>
               <Link to="/contact" style={{ color: '#ccc', textDecoration: 'none' }}>Contact</Link>
+              <Link to="/terms" style={{ color: '#ccc', textDecoration: 'none' }}>Terms and Conditions</Link>
             </Stack>
           </Grid>
           <Grid item xs={12} md={4}>
