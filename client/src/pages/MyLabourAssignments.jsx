@@ -19,11 +19,8 @@ const MyLabourAssignments = () => {
     try {
       // Assume backend returns assignments for labourer via /api/labour/my (or filter here)
       // If you have endpoint /api/labour/my, change to that; otherwise filter by labourer._id
-      const res = await API.get('/api/labour');
-      // Filter where logged-in labourer is the assignee (simplified)
-      // For proper mapping, you'd need the user ID. We'll assume backend returns only assigned.
-      const my = res.data.filter(req => req.status === 'assigned');
-      setAssignments(my);
+      const res = await API.get('/api/labour?filter=assigned');
+      setAssignments(res.data);
     } catch (err) {
       console.error(err);
     } finally {

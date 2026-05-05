@@ -22,8 +22,8 @@ const Navbar = () => {
         <Box sx={{ display: 'flex', gap: 2 }}>
           {user ? (
             <>
-              <Button color="inherit" component={Link} to="/">Home</Button>
               <Button color="inherit" onClick={() => navigate('/dashboard')}>Dashboard</Button>
+              <Button color="inherit" onClick={() => navigate('/profile')}>Profile</Button>
               <Button color="inherit" onClick={handleLogout}>Logout</Button>
             </>
           ) : (
