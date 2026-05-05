@@ -22,6 +22,11 @@ import theme from './theme';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import { Box } from '@mui/material';
+import Services from './pages/Services';
+import AboutUs from './pages/AboutUs';
+import ContactUs from './pages/ContactUs';
+import TermsConditions from './pages/TermsConditions';
+
 
 function App() {
   return (
@@ -31,11 +36,15 @@ function App() {
         <BrowserRouter>
           <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
             <Navbar />
-             <Box component="main" sx={{ flexGrow: 1 }}>
+             <Box component="main" sx={{ flexGrow: 1, pb: 4 }}>
               <Routes>
                 <Route path="/" element={<Landing />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
+                <Route path="/services" element={<Services />} />
+                <Route path="/about" element={<AboutUs />} />
+                <Route path="/contact" element={<ContactUs />} />
+                <Route path="/terms" element={<TermsConditions />} />
                 <Route element={<PrivateRoute />}>
                   <Route path="/dashboard" element={<Dashboard />} />
                   <Route path="/profile" element={<Profile />} />

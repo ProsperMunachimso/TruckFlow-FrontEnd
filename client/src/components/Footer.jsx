@@ -26,12 +26,12 @@ const Footer = () => {
           <Grid item xs={12} md={4}>
             <Typography variant="h6" gutterBottom>Contact</Typography>
             <Typography variant="body2" sx={{ color: '#ccc', opacity: 0.7 }}>Email: obiezueprosper@gmail.com</Typography>
-            <Typography variant="body2" sx={{ color: '#ccc', opacity: 0.7 }}>Phone: +353 (1) 234 5678</Typography>
+            <Typography variant="body2" sx={{ color: '#ccc', opacity: 0.7 }}>Phone: +353 894222654</Typography>
           </Grid>
         </Grid>
         <Divider sx={{ bgcolor: 'grey.700', my: 3 }} />
         <Typography variant="body2" align="center" sx={{ color: '#ccc', opacity: 0.7 }}>
-          © {new Date().getFullYear()} TruckFlow. All rights reserved.
+          &copy; {new Date().getFullYear()} TruckFlow. All rights reserved.
         </Typography>
       </Container>
     </Box>
