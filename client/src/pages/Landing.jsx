@@ -2,8 +2,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import {
-  Container, Box, Typography, Button, Grid, Card, CardContent,
-  Paper, Divider, Stack
+  Container, Box, Typography, Button, Card, CardContent, Divider, Stack
 } from '@mui/material';
 import {
   LocalShipping, TrackChanges, Group, Assignment, Speed,
@@ -12,31 +11,60 @@ import {
 
 const Landing = () => {
   const steps = [
-    { icon: <Assignment fontSize="large" />, title: 'Register', desc: 'Create your account in minutes' },
-    { icon: <LocalShipping fontSize="large" />, title: 'Book a Truck', desc: 'Select truck size and schedule pickup' },
-    { icon: <TrackChanges fontSize="large" />, title: 'Track Delivery', desc: 'Monitor your shipment in real-time' },
-    { icon: <CheckCircle fontSize="large" />, title: 'Receive Goods', desc: 'Get your goods delivered safely' },
+    { icon: <Assignment />, title: 'Register', desc: 'Create your account in minutes with no setup fees.' },
+    { icon: <LocalShipping />, title: 'Book a Truck', desc: 'Select truck size, schedule pickup, and compare quotes.' },
+    { icon: <TrackChanges />, title: 'Track Delivery', desc: 'Monitor your shipment in real-time from pickup to drop-off.' },
+    { icon: <CheckCircle />, title: 'Receive Goods', desc: 'Get your goods delivered safely with proof of delivery.' },
   ];
 
   const features = [
-    { icon: <Speed />, title: 'Fast & Reliable', desc: 'Timely deliveries with real-time updates' },
-    { icon: <SupportAgent />, title: '24/7 Support', desc: 'Dedicated team always ready to help' },
-    { icon: <EmojiTransportation />, title: 'Fleet Options', desc: 'From vans to heavy trucks' },
-    { icon: <Group />, title: 'Trusted by 500+ Businesses', desc: 'Join thousands of satisfied clients' },
+    { icon: <Speed />, title: 'Fast & Reliable', desc: 'Timely deliveries with real-time updates every step of the way.' },
+    { icon: <SupportAgent />, title: '24/7 Support', desc: 'Our dedicated team is always ready to help, day or night.' },
+    { icon: <EmojiTransportation />, title: 'Fleet Options', desc: 'From small vans to heavy-duty trucks — we have you covered.' },
+    { icon: <Group />, title: 'Trusted by 500+ Businesses', desc: 'Join thousands of satisfied clients across Ireland.' },
   ];
+
+  const stats = [
+    { value: '500+', label: 'Verified Transporters' },
+    { value: '12,000+', label: 'Deliveries Completed' },
+    { value: '98%', label: 'On-Time Rate' },
+    { value: '24/7', label: 'Customer Support' },
+  ];
+
+  const ServiceCard = ({ item }) => (
+    <Card elevation={1} sx={{ height: '100%' }}>
+      <CardContent sx={{
+        display: 'flex', alignItems: 'flex-start', gap: 2.5,
+        p: 4, '&:last-child': { pb: 4 }
+      }}>
+        <Box sx={{ color: 'primary.main', mt: 0.5, flexShrink: 0 }}>{item.icon}</Box>
+        <Box>
+          <Typography variant="h6" fontWeight="bold" gutterBottom>{item.title}</Typography>
+          <Typography variant="body2" color="text.secondary" lineHeight={1.7}>{item.desc}</Typography>
+        </Box>
+      </CardContent>
+    </Card>
+  );
 
   return (
     <Box sx={{ bgcolor: 'background.default' }}>
-      {/* Hero Section */}
-      <Box sx={{ bgcolor: 'primary.main', color: 'white', py: 8 }}>
+
+      {/* Hero */}
+      <Box sx={{ bgcolor: 'primary.main', color: 'white', py: 12 }}>
         <Container maxWidth="lg">
-          <Grid container spacing={4} alignItems="center">
-            <Grid item xs={12} md={6}>
-              <Typography variant="h3" component="h1" gutterBottom fontWeight="bold">
+          <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 6, alignItems: 'center' }}>
+            <Box>
+              <Typography
+                variant="h2"
+                component="h1"
+                fontWeight="bold"
+                gutterBottom
+                sx={{ color: 'white', lineHeight: 1.2 }}
+              >
                 Transport Your Goods with Confidence
               </Typography>
-              <Typography variant="h6" sx={{ mb: 3, opacity: 0.9 }}>
-                Book trucks, track shipments in real-time, and request loading services – all in one platform.
+              <Typography variant="h6" sx={{ mb: 4, opacity: 0.85, lineHeight: 1.7 }}>
+                Book trucks, track shipments in real-time, and request loading services — all in one platform built for Irish businesses.
               </Typography>
               <Stack direction="row" spacing={2}>
                 <Button
@@ -44,94 +72,155 @@ const Landing = () => {
                   to="/register"
                   variant="contained"
                   size="large"
-                  sx={{ bgcolor: 'white', color: 'primary.main', '&:hover': { bgcolor: '#f0f0f0' } }}
+                  sx={{
+                    bgcolor: 'white', color: 'primary.main', px: 4, py: 1.5, fontWeight: 'bold',
+                    '&:hover': { bgcolor: '#f0f0f0' }
+                  }}
                 >
-                  Get Started
+                  Get Started Free
                 </Button>
                 <Button
                   component={Link}
                   to="/login"
                   variant="outlined"
                   size="large"
-                  sx={{ borderColor: 'white', color: 'white', '&:hover': { borderColor: '#ddd', bgcolor: 'rgba(255,255,255,0.1)' } }}
+                  sx={{
+                    borderColor: 'white', color: 'white', px: 4, py: 1.5,
+                    '&:hover': { borderColor: '#ddd', bgcolor: 'rgba(255,255,255,0.1)' }
+                  }}
                 >
                   Sign In
                 </Button>
               </Stack>
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <Box sx={{ textAlign: 'center' }}>
-                <EmojiTransportation sx={{ fontSize: 200, opacity: 0.8 }} />
-              </Box>
-            </Grid>
-          </Grid>
+            </Box>
+            <Box sx={{ textAlign: 'center' }}>
+              <EmojiTransportation sx={{ fontSize: 220, opacity: 0.85 }} />
+            </Box>
+          </Box>
         </Container>
       </Box>
 
-      {/* Why Choose Us Section */}
-      <Container maxWidth="lg" sx={{ py: 8 }}>
-        <Typography variant="h4" align="center" gutterBottom fontWeight="bold">
+      {/* Why Choose Us */}
+      <Container maxWidth="lg" sx={{ py: 10 }}>
+        <Typography variant="h4" align="center" fontWeight="bold" gutterBottom>
           Why Choose TruckFlow?
         </Typography>
-        <Typography variant="subtitle1" align="center" color="text.secondary" sx={{ mb: 6 }}>
-          We provide comprehensive transportation solutions tailored to your business needs
+        <Typography variant="subtitle1" align="center" color="text.secondary" sx={{ mb: 8 }}>
+          Comprehensive transportation solutions tailored to your business needs
         </Typography>
-        <Grid container spacing={4}>
-          {features.map((feature, idx) => (
-            <Grid item xs={12} sm={6} md={3} key={idx}>
-              <Card sx={{ height: '100%', textAlign: 'center', p: 2 }}>
-                <Box sx={{ color: 'primary.main', mb: 2 }}>{feature.icon}</Box>
-                <Typography variant="h6" gutterBottom>{feature.title}</Typography>
-                <Typography variant="body2" color="text.secondary">{feature.desc}</Typography>
-              </Card>
-            </Grid>
-          ))}
-        </Grid>
+
+        {/* Row 1: full width */}
+        <Box sx={{ mb: 3 }}>
+          <ServiceCard item={features[0]} />
+        </Box>
+
+        {/* Row 2: two halves */}
+        <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 3, mb: 3 }}>
+          <ServiceCard item={features[1]} />
+          <ServiceCard item={features[2]} />
+        </Box>
+
+        {/* Row 3: full width */}
+        <Box>
+          <ServiceCard item={features[3]} />
+        </Box>
       </Container>
 
-      {/* How It Works Section */}
-      <Box sx={{ bgcolor: 'grey.100', py: 8 }}>
+      {/* Stats Bar */}
+      <Box sx={{ bgcolor: 'white', borderTop: '1px solid', borderBottom: '1px solid', borderColor: 'divider' }}>
         <Container maxWidth="lg">
-          <Typography variant="h4" align="center" gutterBottom fontWeight="bold">
-            How It Works
-          </Typography>
-          <Typography variant="subtitle1" align="center" color="text.secondary" sx={{ mb: 6 }}>
-            Simple steps to get your goods moving
-          </Typography>
-          <Grid container spacing={4}>
-            {steps.map((step, idx) => (
-              <Grid item xs={12} sm={6} md={3} key={idx}>
-                <Paper elevation={3} sx={{ p: 3, textAlign: 'center', height: '100%' }}>
-                  <Box sx={{ bgcolor: 'primary.light', color: 'white', width: 56, height: 56, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}>
-                    {step.icon}
-                  </Box>
-                  <Typography variant="h6" gutterBottom>{step.title}</Typography>
-                  <Typography variant="body2" color="text.secondary">{step.desc}</Typography>
-                </Paper>
-              </Grid>
+          <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', py: 5 }}>
+            {stats.map((stat, i) => (
+              <Box key={i} sx={{
+                textAlign: 'center',
+                borderRight: i < stats.length - 1 ? '1px solid' : 'none',
+                borderColor: 'divider'
+              }}>
+                <Typography variant="h3" fontWeight="bold" color="primary.main">{stat.value}</Typography>
+                <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>{stat.label}</Typography>
+              </Box>
             ))}
-          </Grid>
+          </Box>
         </Container>
       </Box>
 
-      {/* Call to Action Section */}
-      <Container maxWidth="md" sx={{ py: 8, textAlign: 'center' }}>
-        <Typography variant="h4" gutterBottom fontWeight="bold">
-          Ready to Get Started?
-        </Typography>
-        <Typography variant="subtitle1" color="text.secondary" sx={{ mb: 4 }}>
-          Join thousands of businesses that trust TruckFlow for their logistics needs
-        </Typography>
-        <Button
-          component={Link}
-          to="/register"
-          variant="contained"
-          size="large"
-          sx={{ px: 5, py: 1.5 }}
-        >
-          Create Free Account
-        </Button>
-      </Container>
+      {/* How It Works */}
+      <Box sx={{ bgcolor: 'grey.100', py: 10 }}>
+        <Container maxWidth="lg">
+          <Typography variant="h4" align="center" fontWeight="bold" gutterBottom>
+            How It Works
+          </Typography>
+          <Typography variant="subtitle1" align="center" color="text.secondary" sx={{ mb: 8 }}>
+            Simple steps to get your goods moving
+          </Typography>
+
+          <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 3 }}>
+            {steps.map((step, idx) => (
+              <Card key={idx} elevation={1} sx={{ textAlign: 'center' }}>
+                <CardContent sx={{ p: 4, '&:last-child': { pb: 4 } }}>
+                  <Box sx={{
+                    bgcolor: 'primary.main', color: 'white',
+                    width: 52, height: 52, borderRadius: '50%',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    mx: 'auto', mb: 2
+                  }}>
+                    {step.icon}
+                  </Box>
+                  <Typography variant="caption" color="primary.main" fontWeight="bold" sx={{ letterSpacing: 1 }}>
+                    STEP {idx + 1}
+                  </Typography>
+                  <Typography variant="h6" fontWeight="bold" gutterBottom sx={{ mt: 0.5 }}>
+                    {step.title}
+                  </Typography>
+                  <Divider sx={{ my: 1.5 }} />
+                  <Typography variant="body2" color="text.secondary" lineHeight={1.7}>
+                    {step.desc}
+                  </Typography>
+                </CardContent>
+              </Card>
+            ))}
+          </Box>
+        </Container>
+      </Box>
+
+      {/* CTA */}
+      <Box sx={{ bgcolor: 'primary.main', py: 10 }}>
+        <Container maxWidth="md" sx={{ textAlign: 'center' }}>
+          <Typography variant="h4" fontWeight="bold" sx={{ color: 'white', mb: 2 }}>
+            Ready to Get Started?
+          </Typography>
+          <Typography variant="subtitle1" sx={{ color: 'rgba(255,255,255,0.85)', mb: 5 }}>
+            Join hundreds of businesses that trust TruckFlow for their logistics needs across Ireland.
+          </Typography>
+          <Stack direction="row" spacing={2} justifyContent="center">
+            <Button
+              component={Link}
+              to="/register"
+              variant="contained"
+              size="large"
+              sx={{
+                bgcolor: 'white', color: 'primary.main', px: 5, py: 1.5, fontWeight: 'bold',
+                '&:hover': { bgcolor: '#f0f0f0' }
+              }}
+            >
+              Create Free Account
+            </Button>
+            <Button
+              component={Link}
+              to="/services"
+              variant="outlined"
+              size="large"
+              sx={{
+                borderColor: 'white', color: 'white', px: 5, py: 1.5,
+                '&:hover': { borderColor: '#ddd', bgcolor: 'rgba(255,255,255,0.1)' }
+              }}
+            >
+              View Services
+            </Button>
+          </Stack>
+        </Container>
+      </Box>
+
     </Box>
   );
 };
