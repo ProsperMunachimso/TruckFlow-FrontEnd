@@ -10,6 +10,7 @@ import {
   AssignmentTurnedIn, Receipt, LocalShipping, RateReview
 } from '@mui/icons-material';
 import API from '../services/api';
+import BackButton from '../components/BackButton';
 
 const BookingDetails = () => {
   const { id } = useParams();
