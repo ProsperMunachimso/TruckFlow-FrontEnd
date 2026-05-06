@@ -16,9 +16,9 @@ const getTheme = (mode) => createTheme({
     },
     text: {
       primary:   mode === 'light' ? '#111111' : '#E8EDF2',
-      secondary: mode === 'light' ? '#555555' : '#8A9BB0',
+      secondary: mode === 'light' ? '#555555' : '#B0BEC5',
     },
-    divider: mode === 'light' ? 'rgba(0,0,0,0.12)' : 'rgba(255,255,255,0.08)',
+    divider: mode === 'light' ? 'rgba(0,0,0,0.12)' : 'rgba(255,255,255,0.12)',
   },
   components: {
     MuiCard: {
@@ -27,7 +27,7 @@ const getTheme = (mode) => createTheme({
           backgroundImage: 'none',
           ...(mode === 'dark' && {
             backgroundColor: '#1A2636',
-            border: '1px solid rgba(255,255,255,0.06)',
+            border: '1px solid rgba(255,255,255,0.08)',
           }),
         },
       },
@@ -68,7 +68,18 @@ const getTheme = (mode) => createTheme({
       styleOverrides: {
         root: {
           ...(mode === 'dark' && {
-            borderColor: 'rgba(255,255,255,0.08)',
+            borderColor: 'rgba(255,255,255,0.1)',
+          }),
+        },
+      },
+    },
+    MuiTypography: {
+      styleOverrides: {
+        root: {
+          ...(mode === 'dark' && {
+            '&.force-white': {
+              color: '#E8EDF2',
+            },
           }),
         },
       },

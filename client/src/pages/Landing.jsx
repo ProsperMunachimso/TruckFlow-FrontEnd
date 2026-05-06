@@ -2,7 +2,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import {
-  Container, Box, Typography, Button, Card, CardContent, Divider, Stack
+  Container, Box, Typography, Button, Card, CardContent, Divider, Stack, useTheme
 } from '@mui/material';
 import {
   LocalShipping, TrackChanges, Group, Assignment, Speed,
@@ -10,6 +10,9 @@ import {
 } from '@mui/icons-material';
 
 const Landing = () => {
+  const theme = useTheme();
+  const isDark = theme.palette.mode === 'dark';
+
   const steps = [
     { icon: <Assignment />, title: 'Register', desc: 'Create your account in minutes with no setup fees.' },
     { icon: <LocalShipping />, title: 'Book a Truck', desc: 'Select truck size, schedule pickup, and compare quotes.' },
@@ -39,8 +42,14 @@ const Landing = () => {
       }}>
         <Box sx={{ color: 'primary.main', mt: 0.5, flexShrink: 0 }}>{item.icon}</Box>
         <Box>
-          <Typography variant="h6" fontWeight="bold" gutterBottom>{item.title}</Typography>
-          <Typography variant="body2" color="text.secondary" lineHeight={1.7}>{item.desc}</Typography>
+          <Typography variant="h6" fontWeight="bold" gutterBottom
+            sx={{ color: 'text.primary' }}>
+            {item.title}
+          </Typography>
+          <Typography variant="body2" lineHeight={1.7}
+            sx={{ color: 'text.secondary' }}>
+            {item.desc}
+          </Typography>
         </Box>
       </CardContent>
     </Card>
@@ -54,90 +63,76 @@ const Landing = () => {
         <Container maxWidth="lg">
           <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 6, alignItems: 'center' }}>
             <Box>
-              <Typography
-                variant="h2"
-                component="h1"
-                fontWeight="bold"
-                gutterBottom
-                sx={{ color: 'white', lineHeight: 1.2 }}
-              >
+              <Typography variant="h2" component="h1" fontWeight="bold" gutterBottom
+                sx={{ color: 'white', lineHeight: 1.2 }}>
                 Transport Your Goods with Confidence
               </Typography>
-              <Typography variant="h6" sx={{ mb: 4, opacity: 0.85, lineHeight: 1.7 }}>
+              <Typography variant="h6" sx={{ mb: 4, color: 'white', opacity: 0.85, lineHeight: 1.7 }}>
                 Book trucks, track shipments in real-time, and request loading services — all in one platform built for Irish businesses.
               </Typography>
               <Stack direction="row" spacing={2}>
-                <Button
-                  component={Link}
-                  to="/register"
-                  variant="contained"
-                  size="large"
-                  sx={{
-                    bgcolor: 'white', color: 'primary.main', px: 4, py: 1.5, fontWeight: 'bold',
-                    '&:hover': { bgcolor: '#f0f0f0' }
-                  }}
-                >
+                <Button component={Link} to="/register" variant="contained" size="large"
+                  sx={{ bgcolor: 'white', color: 'primary.main', px: 4, py: 1.5, fontWeight: 'bold', '&:hover': { bgcolor: '#f0f0f0' } }}>
                   Get Started Free
                 </Button>
-                <Button
-                  component={Link}
-                  to="/login"
-                  variant="outlined"
-                  size="large"
-                  sx={{
-                    borderColor: 'white', color: 'white', px: 4, py: 1.5,
-                    '&:hover': { borderColor: '#ddd', bgcolor: 'rgba(255,255,255,0.1)' }
-                  }}
-                >
+                <Button component={Link} to="/login" variant="outlined" size="large"
+                  sx={{ borderColor: 'white', color: 'white', px: 4, py: 1.5, '&:hover': { borderColor: '#ddd', bgcolor: 'rgba(255,255,255,0.1)' } }}>
                   Sign In
                 </Button>
               </Stack>
             </Box>
             <Box sx={{ textAlign: 'center' }}>
-              <EmojiTransportation sx={{ fontSize: 220, opacity: 0.85 }} />
+              <EmojiTransportation sx={{ fontSize: 220, opacity: 0.85, color: 'white' }} />
             </Box>
           </Box>
         </Container>
       </Box>
 
       {/* Why Choose Us */}
-      <Container maxWidth="lg" sx={{ py: 10 }}>
-        <Typography variant="h4" align="center" fontWeight="bold" gutterBottom>
-          Why Choose TruckFlow?
-        </Typography>
-        <Typography variant="subtitle1" align="center" color="text.secondary" sx={{ mb: 8 }}>
-          Comprehensive transportation solutions tailored to your business needs
-        </Typography>
-
-        {/* Row 1: full width */}
-        <Box sx={{ mb: 3 }}>
-          <ServiceCard item={features[0]} />
-        </Box>
-
-        {/* Row 2: two halves */}
-        <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 3, mb: 3 }}>
-          <ServiceCard item={features[1]} />
-          <ServiceCard item={features[2]} />
-        </Box>
-
-        {/* Row 3: full width */}
-        <Box>
-          <ServiceCard item={features[3]} />
-        </Box>
-      </Container>
+      <Box sx={{ bgcolor: 'background.default', py: 10 }}>
+        <Container maxWidth="lg">
+          <Typography variant="h4" align="center" fontWeight="bold" gutterBottom
+            sx={{ color: 'text.primary' }}>
+            Why Choose TruckFlow?
+          </Typography>
+          <Typography variant="subtitle1" align="center" sx={{ mb: 8, color: 'text.secondary' }}>
+            Comprehensive transportation solutions tailored to your business needs
+          </Typography>
+          <Box sx={{ mb: 3 }}>
+            <ServiceCard item={features[0]} />
+          </Box>
+          <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 3, mb: 3 }}>
+            <ServiceCard item={features[1]} />
+            <ServiceCard item={features[2]} />
+          </Box>
+          <Box>
+            <ServiceCard item={features[3]} />
+          </Box>
+        </Container>
+      </Box>
 
       {/* Stats Bar */}
-      <Box sx={{ bgcolor: 'white', borderTop: '1px solid', borderBottom: '1px solid', borderColor: 'divider' }}>
+      <Box sx={{
+        bgcolor: 'background.paper',
+        borderTop: '1px solid',
+        borderBottom: '1px solid',
+        borderColor: 'divider',
+      }}>
         <Container maxWidth="lg">
           <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', py: 5 }}>
             {stats.map((stat, i) => (
               <Box key={i} sx={{
                 textAlign: 'center',
                 borderRight: i < stats.length - 1 ? '1px solid' : 'none',
-                borderColor: 'divider'
+                borderColor: 'divider',
+                px: 2,
               }}>
-                <Typography variant="h3" fontWeight="bold" color="primary.main">{stat.value}</Typography>
-                <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>{stat.label}</Typography>
+                <Typography variant="h3" fontWeight="bold" sx={{ color: 'primary.main' }}>
+                  {stat.value}
+                </Typography>
+                <Typography variant="body2" sx={{ mt: 0.5, color: 'text.primary' }}>
+                  {stat.label}
+                </Typography>
               </Box>
             ))}
           </Box>
@@ -145,15 +140,15 @@ const Landing = () => {
       </Box>
 
       {/* How It Works */}
-      <Box sx={{ bgcolor: 'grey.100', py: 10 }}>
+      <Box sx={{ bgcolor: isDark ? '#111E2B' : 'grey.100', py: 10 }}>
         <Container maxWidth="lg">
-          <Typography variant="h4" align="center" fontWeight="bold" gutterBottom>
+          <Typography variant="h4" align="center" fontWeight="bold" gutterBottom
+            sx={{ color: 'text.primary' }}>
             How It Works
           </Typography>
-          <Typography variant="subtitle1" align="center" color="text.secondary" sx={{ mb: 8 }}>
+          <Typography variant="subtitle1" align="center" sx={{ mb: 8, color: 'text.secondary' }}>
             Simple steps to get your goods moving
           </Typography>
-
           <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 3 }}>
             {steps.map((step, idx) => (
               <Card key={idx} elevation={1} sx={{ textAlign: 'center' }}>
@@ -169,11 +164,11 @@ const Landing = () => {
                   <Typography variant="caption" color="primary.main" fontWeight="bold" sx={{ letterSpacing: 1 }}>
                     STEP {idx + 1}
                   </Typography>
-                  <Typography variant="h6" fontWeight="bold" gutterBottom sx={{ mt: 0.5 }}>
+                  <Typography variant="h6" fontWeight="bold" gutterBottom sx={{ mt: 0.5, color: 'text.primary' }}>
                     {step.title}
                   </Typography>
                   <Divider sx={{ my: 1.5 }} />
-                  <Typography variant="body2" color="text.secondary" lineHeight={1.7}>
+                  <Typography variant="body2" lineHeight={1.7} sx={{ color: 'text.secondary' }}>
                     {step.desc}
                   </Typography>
                 </CardContent>
@@ -193,28 +188,12 @@ const Landing = () => {
             Join hundreds of businesses that trust TruckFlow for their logistics needs across Ireland.
           </Typography>
           <Stack direction="row" spacing={2} justifyContent="center">
-            <Button
-              component={Link}
-              to="/register"
-              variant="contained"
-              size="large"
-              sx={{
-                bgcolor: 'white', color: 'primary.main', px: 5, py: 1.5, fontWeight: 'bold',
-                '&:hover': { bgcolor: '#f0f0f0' }
-              }}
-            >
+            <Button component={Link} to="/register" variant="contained" size="large"
+              sx={{ bgcolor: 'white', color: 'primary.main', px: 5, py: 1.5, fontWeight: 'bold', '&:hover': { bgcolor: '#f0f0f0' } }}>
               Create Free Account
             </Button>
-            <Button
-              component={Link}
-              to="/services"
-              variant="outlined"
-              size="large"
-              sx={{
-                borderColor: 'white', color: 'white', px: 5, py: 1.5,
-                '&:hover': { borderColor: '#ddd', bgcolor: 'rgba(255,255,255,0.1)' }
-              }}
-            >
+            <Button component={Link} to="/services" variant="outlined" size="large"
+              sx={{ borderColor: 'white', color: 'white', px: 5, py: 1.5, '&:hover': { borderColor: '#ddd', bgcolor: 'rgba(255,255,255,0.1)' } }}>
               View Services
             </Button>
           </Stack>
