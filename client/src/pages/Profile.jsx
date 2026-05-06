@@ -1,11 +1,12 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useState, useEffect } from ' 'react';
 import { AuthContext } from '../context/AuthContext';
-import { Container, Paper, Typography, TextField, Button, Box, Alert, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
+import { Container, Paper, Typography, TextField, Button, Box, Alert, Dialog, DialogTitle, DialogContent, DialogActions, useTheme } from '@mui/material';
 import API from '../services/api';
 import BackButton from '../components/BackButton';
 import { useNavigate } from 'react-router-dom';
 
 const Profile = () => {
+  const theme = useTheme();
   const { user, setUser, logout } = useContext(AuthContext);
   const navigate = useNavigate();
   const [formData, setFormData] = useState({ name: '', phone: '', address: '' });
@@ -59,7 +60,7 @@ const Profile = () => {
   return (
     <Container maxWidth="sm" sx={{ mt: 4 }}>
       <Paper elevation={3} sx={{ p: 4 }}>
-        <Typography variant="h4" gutterBottom>My Profile</Typography>
+        <Typography variant="h4" gutterBottom sx={{ color: 'text.primary' }}>My Profile</Typography>
         <Box component="form" onSubmit={handleSubmit}>
           <TextField fullWidth label="Name" name="name" margin="normal" value={formData.name} onChange={handleChange} />
           <TextField fullWidth label="Phone" name="phone" margin="normal" value={formData.phone} onChange={handleChange} />
@@ -80,11 +81,22 @@ const Profile = () => {
         </Box>
       </Paper>
 
-      {/* Delete Confirmation Dialog */}
-      <Dialog open={openDeleteDialog} onClose={() => setOpenDeleteDialog(false)}>
-        <DialogTitle>Delete Account</DialogTitle>
+      {/* Delete Confirmation Dialog with better dark mode visibility */}
+      <Dialog 
+        open={openDeleteDialog} 
+        onClose={() => setOpenDeleteDialog(false)}
+        PaperProps={{
+          sx: {
+            backgroundColor: 'background.paper',
+            color: 'text.primary',
+          }
+        }}
+      >
+        <DialogTitle sx={{ color: 'text.primary' }}>Delete Account</DialogTitle>
         <DialogContent>
-          <Typography paragraph>Are you sure? This action is permanent and cannot be undone.</Typography>
+          <Typography variant="body1" sx={{ color: 'text.secondary', mb: 2 }}>
+            Are you sure? This action is permanent and cannot be undone.
+          </Typography>
           <TextField
             fullWidth
             label="Confirm Password"
@@ -92,12 +104,17 @@ const Profile = () => {
             value={deletePassword}
             onChange={(e) => setDeletePassword(e.target.value)}
             margin="normal"
+            InputLabelProps={{ sx: { color: 'text.secondary' } }}
           />
-          {deleteError && <Alert severity="error" sx={{ mt: 1 }}>{deleteError}</Alert>}
+          {deleteError && <Alert severity="error" sx={{ mt: 2 }}>{deleteError}</Alert>}
         </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setOpenDeleteDialog(false)}>Cancel</Button>
-          <Button onClick={handleDeleteAccount} color="error" variant="contained">Delete</Button>
+        <DialogActions sx={{ p: 2 }}>
+          <Button onClick={() => setOpenDeleteDialog(false)} variant="outlined" sx={{ color: 'text.primary', borderColor: 'divider' }}>
+            Cancel
+          </Button>
+          <Button onClick={handleDeleteAccount} variant="contained" color="error">
+            Delete
+          </Button>
         </DialogActions>
       </Dialog>
     </Container>

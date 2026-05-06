@@ -1,6 +1,6 @@
 // client/src/pages/TermsConditions.jsx
 import React, { useState, useEffect } from 'react';
-import { Container, Typography, Box, Card, CardContent, Divider } from '@mui/material';
+import { Container, Typography, Box, Card, CardContent, Divider, useTheme } from '@mui/material';
 import {
   Gavel, AccountCircle, Payment, EventBusy,
   Shield, Lock, Edit, Email
@@ -58,6 +58,7 @@ const sections = [
 ];
 
 const TermsConditions = () => {
+  const theme = useTheme();
   const [activeId, setActiveId] = useState('acceptance');
 
   useEffect(() => {
@@ -83,12 +84,10 @@ const TermsConditions = () => {
 
   return (
     <Container maxWidth="lg" sx={{ py: 10 }}>
-      <Box sx={{ display: 'grid', gridTemplateColumns: '280px 1fr', gap: 5, alignItems: 'start' }}>
+      <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '280px 1fr' }, gap: 5, alignItems: 'start' }}>
 
-        {/* Sidebar — LEFT */}
+        {/* Sidebar */}
         <Box sx={{ position: 'sticky', top: 90 }}>
-
-          {/* Table of Contents */}
           <Card elevation={1} sx={{ mb: 3 }}>
             <CardContent sx={{ p: 3, '&:last-child': { pb: 3 } }}>
               <Typography variant="subtitle2" fontWeight="bold" color="text.secondary"
@@ -105,7 +104,7 @@ const TermsConditions = () => {
                     cursor: 'pointer', transition: 'all 0.2s',
                     bgcolor: activeId === section.id ? 'primary.main' : 'transparent',
                     '&:hover': {
-                      bgcolor: activeId === section.id ? 'primary.main' : 'grey.100'
+                      bgcolor: activeId === section.id ? 'primary.dark' : theme.palette.action.hover,
                     }
                   }}
                 >
@@ -128,7 +127,6 @@ const TermsConditions = () => {
             </CardContent>
           </Card>
 
-          {/* Quick Links */}
           <Card elevation={1}>
             <CardContent sx={{ p: 3, '&:last-child': { pb: 3 } }}>
               <Typography variant="subtitle2" fontWeight="bold" color="text.secondary"
@@ -137,7 +135,7 @@ const TermsConditions = () => {
               </Typography>
               {[
                 { label: 'Home', href: '/' },
-                { label: 'Contact Support', href: 'contact' },
+                { label: 'Contact Support', href: '/contact' },
                 { label: 'About TruckFlow', href: '/about' },
                 { label: 'Our Services', href: '/services' },
               ].map((link, i) => (
@@ -150,7 +148,7 @@ const TermsConditions = () => {
                       borderRadius: 1, fontSize: 13,
                       color: 'primary.main', textDecoration: 'none',
                       transition: 'all 0.2s',
-                      '&:hover': { bgcolor: 'grey.100', textDecoration: 'underline' }
+                      '&:hover': { bgcolor: theme.palette.action.hover, textDecoration: 'underline' }
                     }}
                   >
                     {link.label}
@@ -160,12 +158,10 @@ const TermsConditions = () => {
               ))}
             </CardContent>
           </Card>
-
         </Box>
 
-        {/* Main Content — RIGHT */}
+        {/* Main Content */}
         <Box>
-          {/* Header */}
           <Box sx={{ textAlign: 'center', mb: 6 }}>
             <Box sx={{
               bgcolor: 'primary.main', borderRadius: '50%', p: 2,
@@ -173,19 +169,18 @@ const TermsConditions = () => {
             }}>
               <Gavel sx={{ fontSize: 36, color: 'white' }} />
             </Box>
-            <Typography variant="h3" fontWeight="bold" gutterBottom>
+            <Typography variant="h4" fontWeight="bold" gutterBottom>
               Terms & Conditions
             </Typography>
-            <Typography variant="body2" color="text.secondary">
+            <Typography variant="subtitle1" color="text.secondary">
               Last updated: May 2026
             </Typography>
             <Divider sx={{ mt: 4 }} />
           </Box>
 
-          {/* Intro */}
           <Card elevation={1} sx={{ mb: 3 }}>
             <CardContent sx={{ p: 4, '&:last-child': { pb: 4 } }}>
-              <Typography variant="body1" color="text.secondary" lineHeight={1.8}>
+              <Typography variant="body1" lineHeight={1.8} sx={{ color: 'text.secondary' }}>
                 Please read these Terms and Conditions carefully before using TruckFlow. These terms govern
                 your access to and use of our platform, including all services offered. By creating an account
                 or making a booking, you confirm that you have read, understood, and agree to be bound by
@@ -194,7 +189,6 @@ const TermsConditions = () => {
             </CardContent>
           </Card>
 
-          {/* Sections */}
           {sections.map((section, i) => (
             <Card key={i} id={section.id} elevation={1} sx={{ mb: 3, scrollMarginTop: '80px' }}>
               <CardContent sx={{ p: 4, '&:last-child': { pb: 4 } }}>
@@ -203,14 +197,13 @@ const TermsConditions = () => {
                   <Typography variant="h6" fontWeight="bold">{section.title}</Typography>
                 </Box>
                 <Divider sx={{ mb: 2 }} />
-                <Typography variant="body1" color="text.secondary" lineHeight={1.8}>
+                <Typography variant="body1" lineHeight={1.8} sx={{ color: 'text.secondary' }}>
                   {section.content}
                 </Typography>
               </CardContent>
             </Card>
           ))}
         </Box>
-
       </Box>
     </Container>
   );

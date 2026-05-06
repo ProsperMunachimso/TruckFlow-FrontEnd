@@ -1,12 +1,15 @@
 // client/src/pages/AboutUs.jsx
 import React from 'react';
-import { Container, Typography, Box, Card, CardContent, Avatar, Divider } from '@mui/material';
+import { Container, Typography, Box, Card, CardContent, Avatar, Divider, useTheme } from '@mui/material';
 import {
   EmojiTransportation, Group, History, ThumbUp, LocalShipping,
   TrendingUp, HandshakeOutlined, EnergySavingsLeaf
 } from '@mui/icons-material';
 
 const AboutUs = () => {
+  const theme = useTheme();
+  const isDark = theme.palette.mode === 'dark';
+
   const team = [
     {
       name: 'Prosper Munachimso Obiezue',
@@ -52,24 +55,24 @@ const AboutUs = () => {
             <LocalShipping sx={{ fontSize: 40, color: 'white' }} />
           </Box>
         </Box>
-        <Typography variant="h3" fontWeight="bold" gutterBottom>
+        <Typography variant="h3" fontWeight="bold" sx={{ color: 'text.primary' }} gutterBottom>
           About TruckFlow
         </Typography>
-        <Typography variant="h6" color="text.secondary" sx={{ maxWidth: 600, mx: 'auto', lineHeight: 1.8 }}>
+        <Typography variant="h6" sx={{ maxWidth: 600, mx: 'auto', lineHeight: 1.8, color: 'text.secondary' }}>
           Revolutionising goods transport in Ireland — one delivery at a time.
         </Typography>
       </Box>
 
       {/* Mission & Story */}
-      <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 3, mb: 3 }}>
-        <Card elevation={1} sx={{ height: '100%' }}>
+      <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 3, mb: 3 }}>
+        <Card elevation={1}>
           <CardContent sx={{ p: 4, '&:last-child': { pb: 4 } }}>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 2 }}>
               <TrendingUp color="primary" />
-              <Typography variant="h5" fontWeight="bold">Our Mission</Typography>
+              <Typography variant="h5" fontWeight="bold" sx={{ color: 'text.primary' }}>Our Mission</Typography>
             </Box>
             <Divider sx={{ mb: 2.5 }} />
-            <Typography variant="body1" color="text.secondary" lineHeight={1.8}>
+            <Typography variant="body1" lineHeight={1.8} sx={{ color: 'text.secondary' }}>
               To simplify logistics for businesses of all sizes by providing a seamless, transparent platform
               that connects clients with reliable transporters and labourers across Ireland.
               We remove the friction from freight so you can focus on what matters most — growing your business.
@@ -77,14 +80,14 @@ const AboutUs = () => {
           </CardContent>
         </Card>
 
-        <Card elevation={1} sx={{ height: '100%' }}>
+        <Card elevation={1}>
           <CardContent sx={{ p: 4, '&:last-child': { pb: 4 } }}>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 2 }}>
               <EmojiTransportation color="primary" />
-              <Typography variant="h5" fontWeight="bold">Our Story</Typography>
+              <Typography variant="h5" fontWeight="bold" sx={{ color: 'text.primary' }}>Our Story</Typography>
             </Box>
             <Divider sx={{ mb: 2.5 }} />
-            <Typography variant="body1" color="text.secondary" lineHeight={1.8}>
+            <Typography variant="body1" lineHeight={1.8} sx={{ color: 'text.secondary' }}>
               Founded in 2026 by computing science students at Griffith College Dublin,
               TruckFlow was born from a simple frustration: booking reliable transport in Ireland was
               slow, opaque, and outdated. What started as a college project quickly grew into a
@@ -94,17 +97,17 @@ const AboutUs = () => {
         </Card>
       </Box>
 
-      {/* Stats — full width */}
+      {/* Stats */}
       <Card elevation={1} sx={{ mb: 3 }}>
         <CardContent sx={{ p: 4, '&:last-child': { pb: 4 } }}>
-          <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 2 }}>
+          <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr 1fr', md: 'repeat(4, 1fr)' }, gap: 2 }}>
             {stats.map((stat, i) => (
               <Box key={i} sx={{ textAlign: 'center' }}>
-                <Typography variant="h3" fontWeight="bold" color="primary.main">
-                  {stat.value}
+                <Typography variant="h3" fontWeight="bold" sx={{ color: 'primary.main' }}>
+                    {stat.value}
                 </Typography>
-                <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
-                  {stat.label}
+                <Typography variant="body2" sx={{ mt: 0.5, color: 'text.primary' }}>
+                    {stat.label}
                 </Typography>
               </Box>
             ))}
@@ -112,19 +115,17 @@ const AboutUs = () => {
         </CardContent>
       </Card>
 
-      {/* Values — two halves */}
-      <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 3, mb: 3 }}>
+      {/* Values */}
+      <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 3, mb: 3 }}>
         {values.map((value, i) => (
           <Card key={i} elevation={1}>
             <CardContent sx={{ display: 'flex', alignItems: 'flex-start', gap: 2.5, p: 4, '&:last-child': { pb: 4 } }}>
-              <Box sx={{ color: 'primary.main', mt: 0.5, flexShrink: 0 }}>
-                {value.icon}
-              </Box>
+              <Box sx={{ color: 'primary.main', mt: 0.5, flexShrink: 0 }}>{value.icon}</Box>
               <Box>
-                <Typography variant="h6" fontWeight="bold" gutterBottom>
+                <Typography variant="h6" fontWeight="bold" gutterBottom sx={{ color: 'text.primary' }}>
                   {value.title}
                 </Typography>
-                <Typography variant="body2" color="text.secondary" lineHeight={1.7}>
+                <Typography variant="body2" lineHeight={1.7} sx={{ color: 'text.secondary' }}>
                   {value.desc}
                 </Typography>
               </Box>
@@ -133,21 +134,20 @@ const AboutUs = () => {
         ))}
       </Box>
 
-      {/* Team heading — full width */}
+      {/* Team */}
       <Card elevation={1} sx={{ mb: 3 }}>
         <CardContent sx={{ p: 4, textAlign: 'center', '&:last-child': { pb: 4 } }}>
           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1.5, mb: 1 }}>
             <HandshakeOutlined color="primary" />
-            <Typography variant="h4" fontWeight="bold">Meet the Team</Typography>
+            <Typography variant="h4" fontWeight="bold" sx={{ color: 'text.primary' }}>Meet the Team</Typography>
           </Box>
-          <Typography variant="body1" color="text.secondary">
+          <Typography variant="body1" sx={{ color: 'text.secondary' }}>
             Three developers. One shared goal — making logistics effortless for everyone.
           </Typography>
         </CardContent>
       </Card>
 
-      {/* Team cards — three columns */}
-      <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 3 }}>
+      <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'repeat(3, 1fr)' }, gap: 3 }}>
         {team.map((member, i) => (
           <Card key={i} elevation={1}>
             <CardContent sx={{ p: 4, textAlign: 'center', '&:last-child': { pb: 4 } }}>
@@ -159,21 +159,20 @@ const AboutUs = () => {
               }}>
                 {member.avatar}
               </Avatar>
-              <Typography variant="h6" fontWeight="bold" gutterBottom>
+              <Typography variant="h6" fontWeight="bold" gutterBottom sx={{ color: 'text.primary' }}>
                 {member.name}
               </Typography>
-              <Typography variant="body2" color="primary.main" fontWeight="bold" sx={{ mb: 1.5 }}>
+              <Typography variant="subtitle1" color="primary.main" fontWeight="bold" sx={{ mb: 1.5 }}>
                 {member.role}
               </Typography>
               <Divider sx={{ mb: 1.5 }} />
-              <Typography variant="body2" color="text.secondary" lineHeight={1.7}>
+              <Typography variant="subtitle1" lineHeight={1.7} sx={{ color: 'text.secondary' }}>
                 {member.bio}
               </Typography>
             </CardContent>
           </Card>
         ))}
       </Box>
-
     </Container>
   );
 };

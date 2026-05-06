@@ -27,15 +27,15 @@ const ContactUs = () => {
             <Stack direction="column" spacing={2} sx={{ mt: 2 }}>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                 <Email color="primary" />
-                <Typography>obiezueprosper@gmail.com</Typography>
+                <Typography variant='subtitle1'>obiezueprosper@gmail.com</Typography>
             </Box>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                 <Phone color="primary" />
-                <Typography>+353 894222654</Typography>
+                <Typography variant='subtitle1'>+353 894222654</Typography>
             </Box>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                 <LocationOn color="primary" />
-                <Typography>Griffith College Dublin, South Circular Road, Dublin 8, Ireland</Typography>
+                <Typography variant='subtitle1'>Griffith College Dublin, South Circular Road, Dublin 8, Ireland</Typography>
             </Box>
             </Stack>
         </Paper>
