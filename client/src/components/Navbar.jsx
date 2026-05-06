@@ -1,12 +1,16 @@
 import * as React from 'react';
 import { useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { AppBar, Toolbar, Typography, Button, Box } from '@mui/material';
+import { AppBar, Toolbar, Typography, Button, Box, IconButton } from '@mui/material';
 import { AuthContext } from '../context/AuthContext';
+import { useThemeMode } from '../context/ThemeContext';
+import Brightness4Icon from '@mui/icons-material/Brightness4';
+import Brightness7Icon from '@mui/icons-material/Brightness7';
 
 const Navbar = () => {
   const { user, logout } = useContext(AuthContext);
   const navigate = useNavigate();
+  const { mode, toggleTheme } = useThemeMode(); // <-- added
 
   const handleLogout = async () => {
     await logout();
@@ -33,6 +37,10 @@ const Navbar = () => {
               <Button color="inherit" component={Link} to="/register">Register</Button>
             </>
           )}
+          {/* Theme Toggle Button */}
+          <IconButton color="inherit" onClick={toggleTheme}>
+            {mode === 'light' ? <Brightness4Icon /> : <Brightness7Icon />}
+          </IconButton>
         </Box>
       </Toolbar>
     </AppBar>
