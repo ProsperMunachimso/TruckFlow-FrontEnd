@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Paper, Typography, Table, TableHead, TableRow, TableCell, TableBody, Button, CircularProgress, Alert } from '@mui/material';
+import { Container, Paper, Typography, Table, TableHead, TableRow, TableCell, TableBody, Button, CircularProgress, Alert, Box } from '@mui/material';
 import API from '../services/api';
 import BackButton from '../components/BackButton';
 
@@ -54,45 +54,47 @@ const Invoices = () => {
           // Empty state – no invoices yet
           <Typography>No invoices yet.</Typography>
         ) : (
-          // MUI Table for displaying invoice data
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>Booking</TableCell>      {/* Route description */}
-                <TableCell>Total</TableCell>        {/* Base amount (excluding tax) */}
-                <TableCell>Tax</TableCell>          {/* Tax amount (e.g., 13.5% VAT) */}
-                <TableCell>Grand Total</TableCell>  {/* Total + Tax */}
-                <TableCell>Status</TableCell>       {/* paid / pending */}
-                <TableCell>Action</TableCell>       {/* Pay Now button if pending */}
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {invoices.map(inv => (
-                <TableRow key={inv._id}>
-                  {/* Show pickup to delivery using the booking's locations */}
-                  <TableCell>
-                    {inv.booking?.pickupLocation} → {inv.booking?.deliveryLocation}
-                  </TableCell>
-                  <TableCell>€{inv.totalAmount}</TableCell>
-                  <TableCell>€{inv.tax}</TableCell>
-                  <TableCell>€{inv.grandTotal}</TableCell>
-                  <TableCell>{inv.paymentStatus}</TableCell>
-                  <TableCell>
-                    {/* Only show Pay Now button if invoice is still pending to allow the user to pay */}
-                    {inv.paymentStatus === 'pending' && (
-                      <Button 
-                        variant="contained" 
-                        size="small" 
-                        onClick={() => payInvoice(inv._id)}
-                      >
-                        Pay Now
-                      </Button>
-                    )}
-                  </TableCell>
+          // Wrap table with overflowX auto to allow horizontal scroll on small screens
+          <Box sx={{ overflowX: 'auto' }}>
+            <Table sx={{ minWidth: 600 }}>
+              <TableHead>
+                <TableRow>
+                  <TableCell>Booking</TableCell>      {/* Route description */}
+                  <TableCell>Total</TableCell>        {/* Base amount (excluding tax) */}
+                  <TableCell>Tax</TableCell>          {/* Tax amount (e.g., 13.5% VAT) */}
+                  <TableCell>Grand Total</TableCell>  {/* Total + Tax */}
+                  <TableCell>Status</TableCell>       {/* paid / pending */}
+                  <TableCell>Action</TableCell>       {/* Pay Now button if pending */}
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+              </TableHead>
+              <TableBody>
+                {invoices.map(inv => (
+                  <TableRow key={inv._id}>
+                    {/* Show pickup to delivery using the booking's locations */}
+                    <TableCell>
+                      {inv.booking?.pickupLocation} → {inv.booking?.deliveryLocation}
+                    </TableCell>
+                    <TableCell>€{inv.totalAmount}</TableCell>
+                    <TableCell>€{inv.tax}</TableCell>
+                    <TableCell>€{inv.grandTotal}</TableCell>
+                    <TableCell>{inv.paymentStatus}</TableCell>
+                    <TableCell>
+                      {/* Only show Pay Now button if invoice is still pending to allow the user to pay */}
+                      {inv.paymentStatus === 'pending' && (
+                        <Button 
+                          variant="contained" 
+                          size="small" 
+                          onClick={() => payInvoice(inv._id)}
+                        >
+                          Pay Now
+                        </Button>
+                      )}
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </Box>
         )}
       </Paper>
       <BackButton />

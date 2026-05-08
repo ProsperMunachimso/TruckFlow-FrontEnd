@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Paper, Typography, Table, TableHead, TableRow, TableCell, TableBody, CircularProgress } from '@mui/material';
+import { Container, Paper, Typography, Table, TableHead, TableRow, TableCell, TableBody, CircularProgress, Box } from '@mui/material';
 import API from '../services/api';
 import BackButton from '../components/BackButton';
 
@@ -46,32 +46,35 @@ const MyQuotes = () => {
           // Empty state – no quotes submitted yet
           <Typography>You haven't submitted any quotes yet.</Typography>
         ) : (
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>Booking (pickup → delivery)</TableCell>   
-                <TableCell>Amount (€)</TableCell>                   {/* Quote price */}
-                <TableCell>Est. Hours</TableCell>                   {/* Estimated duration */}
-                <TableCell>Status</TableCell>                       {/* pending, accepted, etc. */}
-                <TableCell>Created</TableCell>                      {/* Date quote was submitted */}
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {quotes.map(quote => (
-                <TableRow key={quote._id}>
-                  {/* Show pickup and delivery locations from the associated booking */}
-                  <TableCell>
-                    {quote.booking?.pickupLocation} → {quote.booking?.deliveryLocation}
-                  </TableCell>
-                  <TableCell>{quote.amount}</TableCell>
-                  <TableCell>{quote.estimatedDurationHours || '—'}</TableCell>  {/* Leave empty(-) if no time is inputed */}
-                  <TableCell>{quote.status}</TableCell>
-                  {/* Format the creation date to a readable string*/}
-                  <TableCell>{new Date(quote.createdAt).toLocaleDateString()}</TableCell>
+          // Wrap table with overflowX auto to allow horizontal scroll on small screens
+          <Box sx={{ overflowX: 'auto' }}>
+            <Table sx={{ minWidth: 650 }}>
+              <TableHead>
+                <TableRow>
+                  <TableCell>Booking (pickup → delivery)</TableCell>   
+                  <TableCell>Amount (€)</TableCell>                   {/* Quote price */}
+                  <TableCell>Est. Hours</TableCell>                   {/* Estimated duration */}
+                  <TableCell>Status</TableCell>                       {/* pending, accepted, etc. */}
+                  <TableCell>Created</TableCell>                      {/* Date quote was submitted */}
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+              </TableHead>
+              <TableBody>
+                {quotes.map(quote => (
+                  <TableRow key={quote._id}>
+                    {/* Show pickup and delivery locations from the associated booking */}
+                    <TableCell>
+                      {quote.booking?.pickupLocation} → {quote.booking?.deliveryLocation}
+                    </TableCell>
+                    <TableCell>{quote.amount}</TableCell>
+                    <TableCell>{quote.estimatedDurationHours || '—'}</TableCell>  {/* Leave empty(-) if no time is inputed */}
+                    <TableCell>{quote.status}</TableCell>
+                    {/* Format the creation date to a readable string*/}
+                    <TableCell>{new Date(quote.createdAt).toLocaleDateString()}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </Box>
         )}
         <BackButton />   {/* Reusable button to go back to previous page */}
       </Paper>

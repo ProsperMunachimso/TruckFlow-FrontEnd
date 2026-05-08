@@ -138,32 +138,35 @@ const TransporterDashboard = () => {
       {pendingBookings.length === 0 ? (
         <Typography>No pending bookings at the moment.</Typography>
       ) : (
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>Pickup</TableCell>
-              <TableCell>Delivery</TableCell>
-              <TableCell>Weight (kg)</TableCell>
-              <TableCell>Pickup Date</TableCell>
-              <TableCell>Action</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {pendingBookings.map(booking => (
-              <TableRow key={booking._id}>
-                <TableCell>{booking.pickupLocation}</TableCell>
-                <TableCell>{booking.deliveryLocation}</TableCell>
-                <TableCell>{booking.weightKg || '—'}</TableCell>
-                <TableCell>{new Date(booking.pickupDate).toLocaleDateString()}</TableCell>
-                <TableCell>
-                  <Button variant="contained" size="small" onClick={() => handleQuote(booking._id)}>
-                    Submit Quote
-                  </Button>
-                </TableCell>
+        // Wrap table with overflowX auto to allow horizontal scroll on small screens
+        <Box sx={{ overflowX: 'auto' }}>
+          <Table sx={{ minWidth: 600 }}>
+            <TableHead>
+              <TableRow>
+                <TableCell>Pickup</TableCell>
+                <TableCell>Delivery</TableCell>
+                <TableCell>Weight (kg)</TableCell>
+                <TableCell>Pickup Date</TableCell>
+                <TableCell>Action</TableCell>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+            </TableHead>
+            <TableBody>
+              {pendingBookings.map(booking => (
+                <TableRow key={booking._id}>
+                  <TableCell>{booking.pickupLocation}</TableCell>
+                  <TableCell>{booking.deliveryLocation}</TableCell>
+                  <TableCell>{booking.weightKg || '—'}</TableCell>
+                  <TableCell>{new Date(booking.pickupDate).toLocaleDateString()}</TableCell>
+                  <TableCell>
+                    <Button variant="contained" size="small" onClick={() => handleQuote(booking._id)}>
+                      Submit Quote
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </Box>
       )}
 
       <Divider sx={{ my: 2 }} />
@@ -173,31 +176,34 @@ const TransporterDashboard = () => {
       {myQuotes.length === 0 ? (
         <Typography>You haven't submitted any quotes yet.</Typography>
       ) : (
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>Booking (pickup to delivery)</TableCell>
-              <TableCell>Amount (€)</TableCell>
-              <TableCell>Status</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {/* .slice(0,5) limits to the 5 most recent – assumes API returns newest first */}
-            {myQuotes.slice(0, 5).map(quote => (
-              <TableRow key={quote._id}>
-                <TableCell>{quote.booking?.pickupLocation} → {quote.booking?.deliveryLocation}</TableCell>
-                <TableCell>€{quote.amount}</TableCell>
-                <TableCell>
-                  <Chip
-                    label={quote.status}
-                    color={quote.status === 'accepted' ? 'success' : (quote.status === 'pending' ? 'warning' : 'default')}
-                    size="small"
-                  />
-                </TableCell>
+        // Wrap table with overflowX auto
+        <Box sx={{ overflowX: 'auto' }}>
+          <Table sx={{ minWidth: 500 }}>
+            <TableHead>
+              <TableRow>
+                <TableCell>Booking (pickup → delivery)</TableCell>
+                <TableCell>Amount (€)</TableCell>
+                <TableCell>Status</TableCell>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+            </TableHead>
+            <TableBody>
+              {/* .slice(0,5) limits to the 5 most recent – assumes API returns newest first */}
+              {myQuotes.slice(0, 5).map(quote => (
+                <TableRow key={quote._id}>
+                  <TableCell>{quote.booking?.pickupLocation} → {quote.booking?.deliveryLocation}</TableCell>
+                  <TableCell>€{quote.amount}</TableCell>
+                  <TableCell>
+                    <Chip
+                      label={quote.status}
+                      color={quote.status === 'accepted' ? 'success' : (quote.status === 'pending' ? 'warning' : 'default')}
+                      size="small"
+                    />
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </Box>
       )}
     </Container>
   );

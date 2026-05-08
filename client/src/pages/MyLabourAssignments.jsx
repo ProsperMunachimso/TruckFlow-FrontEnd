@@ -48,34 +48,37 @@ const MyLabourAssignments = () => {
           // Empty state when there is no assignments yet
           <Typography>No assignments yet.</Typography>
         ) : (
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>Booking</TableCell>      {/* Pickup/ Delivery route the user wants */}
-                <TableCell>Type</TableCell>         {/* loading, unloading, or both if the user wants */}
-                <TableCell>Workers</TableCell>      {/* Number of labourers needed */}
-                <TableCell>Hours</TableCell>        {/* Estimated hours */}
-                <TableCell>Status</TableCell>       {/* assigned, completed, etc. */}
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {assignments.map(req => (
-                <TableRow key={req._id}>
-                  {/* Show route using optional chaining, in case booking is null */}
-                  <TableCell>
-                    {req.booking?.pickupLocation} → {req.booking?.deliveryLocation}
-                  </TableCell>
-                  <TableCell>{req.type}</TableCell>
-                  <TableCell>{req.numberOfLabourers}</TableCell>
-                  <TableCell>{req.hours}</TableCell>
-                  <TableCell>
-                    {/* Chip displays status with primary colour (blue) and could change based on status */}
-                    <Chip label={req.status} color="primary" size="small" />
-                  </TableCell>
+          // Wrap table with overflowX auto to allow horizontal scroll on small screens
+          <Box sx={{ overflowX: 'auto' }}>
+            <Table sx={{ minWidth: 600 }}>
+              <TableHead>
+                <TableRow>
+                  <TableCell>Booking</TableCell>      {/* Pickup/ Delivery route the user wants */}
+                  <TableCell>Type</TableCell>         {/* loading, unloading, or both if the user wants */}
+                  <TableCell>Workers</TableCell>      {/* Number of labourers needed */}
+                  <TableCell>Hours</TableCell>        {/* Estimated hours */}
+                  <TableCell>Status</TableCell>       {/* assigned, completed, etc. */}
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+              </TableHead>
+              <TableBody>
+                {assignments.map(req => (
+                  <TableRow key={req._id}>
+                    {/* Show route using optional chaining, in case booking is null */}
+                    <TableCell>
+                      {req.booking?.pickupLocation} → {req.booking?.deliveryLocation}
+                    </TableCell>
+                    <TableCell>{req.type}</TableCell>
+                    <TableCell>{req.numberOfLabourers}</TableCell>
+                    <TableCell>{req.hours}</TableCell>
+                    <TableCell>
+                      {/* Chip displays status with primary colour (blue) and could change based on status */}
+                      <Chip label={req.status} color="primary" size="small" />
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </Box>
         )}
         <BackButton /> 
       </Paper>
