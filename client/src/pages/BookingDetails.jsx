@@ -119,7 +119,7 @@ const BookingDetails = () => {
         
         {/* Header row: title + status chip */}
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-          <Typography variant="h4" component="h1">
+          <Typography variant="h4">
             Booking Details
           </Typography>
           <Chip
@@ -142,8 +142,8 @@ const BookingDetails = () => {
                   <LocationOn color="primary" /> Route
                 </Typography>
                 <Box sx={{ pl: 4 }}>
-                  <Typography variant="body1"><strong>Pickup:</strong> {booking.pickupLocation}</Typography>
-                  <Typography variant="body1" sx={{ mt: 1 }}><strong>Delivery:</strong> {booking.deliveryLocation}</Typography>
+                  <Typography variant="subtitle1"><strong>Pickup:</strong> {booking.pickupLocation}</Typography>
+                  <Typography variant="subtitle1" sx={{ mt: 1 }}><strong>Delivery:</strong> {booking.deliveryLocation}</Typography>
                 </Box>
               </CardContent>
             </Card>
