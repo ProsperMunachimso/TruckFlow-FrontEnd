@@ -64,7 +64,7 @@ const MyQuotes = () => {
                     {quote.booking?.pickupLocation} → {quote.booking?.deliveryLocation}
                   </TableCell>
                   <TableCell>{quote.amount}</TableCell>
-                  <TableCell>{quote.estimatedDurationHours || '—'}</TableCell>  // '—' if no duration provided
+                  <TableCell>{quote.estimatedDurationHours || '—'}</TableCell>  {/* Leave empty(-) if no time is inputed */}
                   <TableCell>{quote.status}</TableCell>
                   {/* Format the creation date to a readable string*/}
                   <TableCell>{new Date(quote.createdAt).toLocaleDateString()}</TableCell>

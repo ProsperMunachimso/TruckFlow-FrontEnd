@@ -1,4 +1,3 @@
-// client/src/pages/ClientDashboard.jsx
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import {
@@ -15,9 +14,6 @@ import API from '../services/api';
 // ClientDashboard, it shows the main landing page for logged‑in clients
 // Shows key metrics like active shipments, completed deliveries, labour requests, total spend.
 // Also displays quick action buttons and a table of recent bookings.
-
-
-
 
 // We used many MUI components here:
 // - Container: centers content with max width
@@ -204,35 +200,38 @@ const ClientDashboard = () => {
       {recentBookings.length === 0 ? (
         <Typography>No bookings yet. <Link to="/bookings/new">Create one</Link>.</Typography>
       ) : (
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>ID</TableCell>
-              <TableCell>Route</TableCell>
-              <TableCell>Status</TableCell>
-              <TableCell>Pickup Date</TableCell>
-              <TableCell>Action</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {recentBookings.map(booking => (
-              <TableRow key={booking._id}>
-                {/* Display only the last 6 characters of the booking ID for brevity */}
-                <TableCell>BK-{booking._id.slice(-6)}</TableCell>
-                <TableCell>{booking.pickupLocation} → {booking.deliveryLocation}</TableCell>
-                <TableCell>
-                  <Chip label={booking.status} size="small" color={getStatusColor(booking.status)} />
-                </TableCell>
-                <TableCell>{new Date(booking.pickupDate).toLocaleDateString()}</TableCell>
-                <TableCell>
-                  <Button component={Link} to={`/bookings/${booking._id}`} size="small" variant="outlined">
-                    Track
-                  </Button>
-                </TableCell>
+        // Wrap table with overflowX auto for horizontal scroll on small screens
+        <Box sx={{ overflowX: 'auto' }}>
+          <Table sx={{ minWidth: 600 }}>
+            <TableHead>
+              <TableRow>
+                <TableCell>ID</TableCell>
+                <TableCell>Route</TableCell>
+                <TableCell>Status</TableCell>
+                <TableCell>Pickup Date</TableCell>
+                <TableCell>Action</TableCell>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+            </TableHead>
+            <TableBody>
+              {recentBookings.map(booking => (
+                <TableRow key={booking._id}>
+                  {/* Display only the last 6 characters of the booking ID for brevity */}
+                  <TableCell>BK-{booking._id.slice(-6)}</TableCell>
+                  <TableCell>{booking.pickupLocation} → {booking.deliveryLocation}</TableCell>
+                  <TableCell>
+                    <Chip label={booking.status} size="small" color={getStatusColor(booking.status)} />
+                  </TableCell>
+                  <TableCell>{new Date(booking.pickupDate).toLocaleDateString()}</TableCell>
+                  <TableCell>
+                    <Button component={Link} to={`/bookings/${booking._id}`} size="small" variant="outlined">
+                      Track
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </Box>
       )}
       <Box sx={{ textAlign: 'right', mt: 2 }}>
         <Button component={Link} to="/bookings">View All</Button>

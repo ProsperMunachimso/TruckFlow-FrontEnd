@@ -176,7 +176,7 @@ const TransporterDashboard = () => {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>Booking (pickup → delivery)</TableCell>
+              <TableCell>Booking (pickup to delivery)</TableCell>
               <TableCell>Amount (€)</TableCell>
               <TableCell>Status</TableCell>
             </TableRow>

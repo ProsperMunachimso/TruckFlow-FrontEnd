@@ -93,15 +93,15 @@ const TermsConditions = () => {
   // - We made this page is publicly accessible. We added an intersection Observer API to track which section is currently visible in the viewport
   // - rootMargin: '-30% 0px -60% 0px' means a section is considered "active" when it's in the middle 10-70% of the screen
   // - Sections have scrollMarginTop to prevent the fixed navbar from covering the title when scrolling via hash or sidebar click
-  // - Sidebar is sticky (position: sticky) and remains visible as you scroll
+  // - Sidebar is sticky on desktop, but stacks on top on mobile
   // - The table of contents uses a hover effect that combines with the active highlight for better UI
   return (
-    <Container maxWidth="lg" sx={{ py: 10 }}>
-      {/* Two-column layout: sidebar (sticky) + main content */}
-      <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '280px 1fr' }, gap: 5, alignItems: 'start' }}>
+    <Container maxWidth="lg" sx={{ py: { xs: 6, md: 10 } }}>
+      {/* Two-column layout: sidebar (sticky on desktop, block on mobile) + main content */}
+      <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '280px 1fr' }, gap: { xs: 3, md: 5 }, alignItems: 'start' }}>
 
-        {/* SIDEBAR – table of contents & quick links */}
-        <Box sx={{ position: 'sticky', top: 90 }}>  {/* Stays in place while scrolling */}
+        {/* SIDEBAR – table of contents & quick links. Sticky only on desktop, normal on mobile */}
+        <Box sx={{ position: { md: 'sticky' }, top: { md: 90 } }}>  
           <Card elevation={1} sx={{ mb: 3 }}>
             <CardContent sx={{ p: 3, '&:last-child': { pb: 3 } }}>
               <Typography variant="subtitle2" fontWeight="bold" color="text.secondary"

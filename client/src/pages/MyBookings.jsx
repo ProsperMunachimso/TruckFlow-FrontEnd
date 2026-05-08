@@ -99,6 +99,7 @@ const MyBookings = () => {
   // - After editing, the entire booking state is refreshed with the updated object from backend
   // - Deleting a booking removes it from the state immediately
   // - The table uses inline edit mode for simplicity 
+  // - Added overflowX auto for responsive scrolling on mobile
   return (
     <Container maxWidth="lg" sx={{ mt: 4 }}>
       <Typography variant="h4" gutterBottom>My Bookings</Typography>
@@ -106,108 +107,110 @@ const MyBookings = () => {
         // Empty state: encourage user to create first booking
         <Typography>You have no bookings yet. <Link to="/bookings/new">Create one</Link>.</Typography>
       ) : (
-        // TableContainer adds scrolling for large tables and wraps with Paper
-        <TableContainer component={Paper}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>Pickup</TableCell>
-                <TableCell>Delivery</TableCell>
-                <TableCell>Weight (kg)</TableCell>
-                <TableCell>Date</TableCell>
-                <TableCell>Status</TableCell>
-                <TableCell>Actions</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {bookings.map(booking => (
-                <TableRow key={booking._id}>
-                  {editingId === booking._id ? (
-                    // EDIT MODE uses inline form with TextFields for editing
-                    <>
-                      <TableCell>
-                        <TextField
-                          name="pickupLocation"
-                          value={editData.pickupLocation}
-                          onChange={handleEditChange}
-                          size="small"
-                          fullWidth
-                        />
-                      </TableCell>
-                      <TableCell>
-                        <TextField
-                          name="deliveryLocation"
-                          value={editData.deliveryLocation}
-                          onChange={handleEditChange}
-                          size="small"
-                          fullWidth
-                        />
-                      </TableCell>
-                      <TableCell>
-                        <TextField
-                          name="weightKg"
-                          type="number"     // Shows numeric keyboard on mobile
-                          value={editData.weightKg}
-                          onChange={handleEditChange}
-                          size="small"
-                          fullWidth
-                        />
-                      </TableCell>
-                      <TableCell>{new Date(booking.pickupDate).toLocaleDateString()}</TableCell>
-                      <TableCell>{booking.status}</TableCell>
-                      <TableCell>
-                        <IconButton onClick={() => saveEdit(booking._id)} color="primary" size="small">
-                          <SaveIcon />
-                        </IconButton>
-                        <IconButton onClick={cancelEdit} color="error" size="small">
-                          <CancelIcon />
-                        </IconButton>
-                      </TableCell>
-                    </>
-                  ) : (
-                    // *DISPLAY MODE* – read‑only row with action buttons
-                    <>
-                      <TableCell>{booking.pickupLocation}</TableCell>
-                      <TableCell>{booking.deliveryLocation}</TableCell>
-                      <TableCell>{booking.weightKg || '—'}</TableCell>
-                      <TableCell>{new Date(booking.pickupDate).toLocaleDateString()}</TableCell>
-                      <TableCell>{booking.status}</TableCell>
-                      <TableCell>
-                        {/* View details button – always available */}
-                        <IconButton
-                          component={Link}
-                          to={`/bookings/${booking._id}`}
-                          color="primary"
-                          size="small"
-                        >
-                          <VisibilityIcon />
-                        </IconButton>
-                        {/* Edit button – disabled unless status is 'pending' */}
-                        <IconButton
-                          onClick={() => startEdit(booking)}
-                          disabled={booking.status !== 'pending'}
-                          color="secondary"
-                          size="small"
-                        >
-                          <EditIcon />
-                        </IconButton>
-                        {/* Delete button – disabled unless status is 'pending' */}
-                        <IconButton
-                          onClick={() => handleDelete(booking._id)}
-                          disabled={booking.status !== 'pending'}
-                          color="error"
-                          size="small"
-                        >
-                          <DeleteIcon />
-                        </IconButton>
-                      </TableCell>
-                    </>
-                  )}
+        // Wrap TableContainer with overflowX auto to allow horizontal scroll on small screens
+        <Box sx={{ overflowX: 'auto' }}>
+          <TableContainer component={Paper} sx={{ minWidth: 800 }}>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>Pickup</TableCell>
+                  <TableCell>Delivery</TableCell>
+                  <TableCell>Weight (kg)</TableCell>
+                  <TableCell>Date</TableCell>
+                  <TableCell>Status</TableCell>
+                  <TableCell>Actions</TableCell>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+              </TableHead>
+              <TableBody>
+                {bookings.map(booking => (
+                  <TableRow key={booking._id}>
+                    {editingId === booking._id ? (
+                      // EDIT MODE uses inline form with TextFields for editing
+                      <>
+                        <TableCell>
+                          <TextField
+                            name="pickupLocation"
+                            value={editData.pickupLocation}
+                            onChange={handleEditChange}
+                            size="small"
+                            fullWidth
+                          />
+                        </TableCell>
+                        <TableCell>
+                          <TextField
+                            name="deliveryLocation"
+                            value={editData.deliveryLocation}
+                            onChange={handleEditChange}
+                            size="small"
+                            fullWidth
+                          />
+                        </TableCell>
+                        <TableCell>
+                          <TextField
+                            name="weightKg"
+                            type="number"     // Shows numeric keyboard on mobile
+                            value={editData.weightKg}
+                            onChange={handleEditChange}
+                            size="small"
+                            fullWidth
+                          />
+                        </TableCell>
+                        <TableCell>{new Date(booking.pickupDate).toLocaleDateString()}</TableCell>
+                        <TableCell>{booking.status}</TableCell>
+                        <TableCell>
+                          <IconButton onClick={() => saveEdit(booking._id)} color="primary" size="small">
+                            <SaveIcon />
+                          </IconButton>
+                          <IconButton onClick={cancelEdit} color="error" size="small">
+                            <CancelIcon />
+                          </IconButton>
+                        </TableCell>
+                      </>
+                    ) : (
+                      // *DISPLAY MODE* – read‑only row with action buttons
+                      <>
+                        <TableCell>{booking.pickupLocation}</TableCell>
+                        <TableCell>{booking.deliveryLocation}</TableCell>
+                        <TableCell>{booking.weightKg || '—'}</TableCell>
+                        <TableCell>{new Date(booking.pickupDate).toLocaleDateString()}</TableCell>
+                        <TableCell>{booking.status}</TableCell>
+                        <TableCell>
+                          {/* View details button – always available */}
+                          <IconButton
+                            component={Link}
+                            to={`/bookings/${booking._id}`}
+                            color="primary"
+                            size="small"
+                          >
+                            <VisibilityIcon />
+                          </IconButton>
+                          {/* Edit button – disabled unless status is 'pending' */}
+                          <IconButton
+                            onClick={() => startEdit(booking)}
+                            disabled={booking.status !== 'pending'}
+                            color="secondary"
+                            size="small"
+                          >
+                            <EditIcon />
+                          </IconButton>
+                          {/* Delete button – disabled unless status is 'pending' */}
+                          <IconButton
+                            onClick={() => handleDelete(booking._id)}
+                            disabled={booking.status !== 'pending'}
+                            color="error"
+                            size="small"
+                          >
+                            <DeleteIcon />
+                          </IconButton>
+                        </TableCell>
+                      </>
+                    )}
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </Box>
       )}
       <BackButton />
     </Container>
@@ -229,6 +232,5 @@ const MyBookings = () => {
 // - DeleteIcon: delete booking
 // - SaveIcon: save edited booking
 // - CancelIcon: cancel edit mode
-
 
 export default MyBookings;
