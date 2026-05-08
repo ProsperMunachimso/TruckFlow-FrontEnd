@@ -1,4 +1,3 @@
-// client/src/pages/Landing.jsx
 import React from 'react';
 import { Link } from 'react-router-dom';
 import {
@@ -9,10 +8,15 @@ import {
   SupportAgent, EmojiTransportation, CheckCircle
 } from '@mui/icons-material';
 
+// Landing page, the first thing users see when they visit our app(Truckflow).
+// A marketing page that explains the service, shows features, stats, and a call to action.
+// Uses MUI components for consistent branding and responsive design.
 const Landing = () => {
+  // useTheme gives us access to the current theme (light/dark mode)
   const theme = useTheme();
   const isDark = theme.palette.mode === 'dark';
 
+  // Array of steps for the How It Works section
   const steps = [
     { icon: <Assignment />, title: 'Register', desc: 'Create your account in minutes with no setup fees.' },
     { icon: <LocalShipping />, title: 'Book a Truck', desc: 'Select truck size, schedule pickup, and compare quotes.' },
@@ -20,6 +24,7 @@ const Landing = () => {
     { icon: <CheckCircle />, title: 'Receive Goods', desc: 'Get your goods delivered safely with proof of delivery.' },
   ];
 
+  // Array of feature cards for the Why Choose Us? section
   const features = [
     { icon: <Speed />, title: 'Fast & Reliable', desc: 'Timely deliveries with real-time updates every step of the way.' },
     { icon: <SupportAgent />, title: '24/7 Support', desc: 'Our dedicated team is always ready to help, day or night.' },
@@ -27,6 +32,7 @@ const Landing = () => {
     { icon: <Group />, title: 'Trusted by 500+ Businesses', desc: 'Join thousands of satisfied clients across Ireland.' },
   ];
 
+  // Array for the Stats displayed in the stats bar we made it the same as the About Us page for consistency
   const stats = [
     { value: '500+', label: 'Verified Transporters' },
     { value: '12,000+', label: 'Deliveries Completed' },
@@ -56,12 +62,22 @@ const Landing = () => {
   );
 
   return (
+    // - We made this page publicly accessible 
+    // - All buttons use React Router's Link component for client-side navigation
+    // - The layout uses CSS Grid for responsive columns (no MUI Grid component)
+    // - The ServiceCard component is defined inside Landing because it's only used here
+    // - The stats bar has borders and dividers that adapt to dark mode
+    // - The How It Works background changes colour based on dark/light mode using the isDark variable we created 
+
+    // Main wrapper with background color from theme (light/dark)
     <Box sx={{ bgcolor: 'background.default' }}>
 
-      {/* Hero */}
+      {/* HERO SECTION, Blue background with title, subtitle, buttons, and a large truck emoji */}
       <Box sx={{ bgcolor: 'primary.main', color: 'white', py: 12 }}>
         <Container maxWidth="lg">
+          {/* Two-column layout: text left, emoji right */}
           <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 6, alignItems: 'center' }}>
+            {/* Left column: hero text */}
             <Box>
               <Typography variant="h2" component="h1" fontWeight="bold" gutterBottom
                 sx={{ color: 'white', lineHeight: 1.2 }}>
@@ -70,6 +86,7 @@ const Landing = () => {
               <Typography variant="h6" sx={{ mb: 4, color: 'white', opacity: 0.85, lineHeight: 1.7 }}>
                 Book trucks, track shipments in real-time, and request loading services — all in one platform built for Irish businesses.
               </Typography>
+              {/* Call-to-action buttons */}
               <Stack direction="row" spacing={2}>
                 <Button component={Link} to="/register" variant="contained" size="large"
                   sx={{ bgcolor: 'white', color: 'primary.main', px: 4, py: 1.5, fontWeight: 'bold', '&:hover': { bgcolor: '#f0f0f0' } }}>
@@ -81,6 +98,7 @@ const Landing = () => {
                 </Button>
               </Stack>
             </Box>
+            {/* Right column: large emoji icon (truck) */}
             <Box sx={{ textAlign: 'center' }}>
               <EmojiTransportation sx={{ fontSize: 220, opacity: 0.85, color: 'white' }} />
             </Box>
@@ -88,7 +106,7 @@ const Landing = () => {
         </Container>
       </Box>
 
-      {/* Why Choose Us */}
+      {/* WHY CHOOSE US SECTION – Background from theme default */}
       <Box sx={{ bgcolor: 'background.default', py: 10 }}>
         <Container maxWidth="lg">
           <Typography variant="h4" align="center" fontWeight="bold" gutterBottom
@@ -98,6 +116,9 @@ const Landing = () => {
           <Typography variant="subtitle1" align="center" sx={{ mb: 8, color: 'text.secondary' }}>
             Comprehensive transportation solutions tailored to your business needs
           </Typography>
+          {/* Display the four feature cards in a custom grid layout.
+              First card takes full width, then two side by side, then last full width.
+              We used this because it creates a staggered, visually interesting layout. */}
           <Box sx={{ mb: 3 }}>
             <ServiceCard item={features[0]} />
           </Box>
@@ -111,7 +132,7 @@ const Landing = () => {
         </Container>
       </Box>
 
-      {/* Stats Bar */}
+      {/* STATS BAR – Light/dark background based on theme paper color, with top/bottom borders */}
       <Box sx={{
         bgcolor: 'background.paper',
         borderTop: '1px solid',
@@ -119,6 +140,7 @@ const Landing = () => {
         borderColor: 'divider',
       }}>
         <Container maxWidth="lg">
+          {/* Four equal columns with right borders except last. It loops through our created array by using maps */}
           <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', py: 5 }}>
             {stats.map((stat, i) => (
               <Box key={i} sx={{
@@ -139,7 +161,7 @@ const Landing = () => {
         </Container>
       </Box>
 
-      {/* How It Works */}
+      {/* HOW IT WORKS SECTION, Background changes based on theme (dark mode = darker blue, light mode = grey.100) */}
       <Box sx={{ bgcolor: isDark ? '#111E2B' : 'grey.100', py: 10 }}>
         <Container maxWidth="lg">
           <Typography variant="h4" align="center" fontWeight="bold" gutterBottom
@@ -149,10 +171,12 @@ const Landing = () => {
           <Typography variant="subtitle1" align="center" sx={{ mb: 8, color: 'text.secondary' }}>
             Simple steps to get your goods moving
           </Typography>
+          {/* Thia prints four step cards in a grid by looping through the array we created using maps*/}
           <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 3 }}>
             {steps.map((step, idx) => (
               <Card key={idx} elevation={1} sx={{ textAlign: 'center' }}>
                 <CardContent sx={{ p: 4, '&:last-child': { pb: 4 } }}>
+                  {/* Circular background for step icon */}
                   <Box sx={{
                     bgcolor: 'primary.main', color: 'white',
                     width: 52, height: 52, borderRadius: '50%',
@@ -178,7 +202,7 @@ const Landing = () => {
         </Container>
       </Box>
 
-      {/* CTA */}
+      {/* CALL TO ACTION SECTION, Blue background with two buttons */}
       <Box sx={{ bgcolor: 'primary.main', py: 10 }}>
         <Container maxWidth="md" sx={{ textAlign: 'center' }}>
           <Typography variant="h4" fontWeight="bold" sx={{ color: 'white', mb: 2 }}>
@@ -203,5 +227,17 @@ const Landing = () => {
     </Box>
   );
 };
+
+// MUI components used for this page:
+// - Container: centers content with max width
+// - Box: generic layout wrapper with background colours
+// - Typography: headings, body text, captions
+// - Button: call-to-action and navigation buttons
+// - Card, CardContent: for feature and step cards
+// - Divider: horizontal line inside step cards
+// - Stack: horizontal layout for buttons
+// - useTheme: accesses theme to change background based on dark mode
+// Icons used: Assignment, LocalShipping, TrackChanges, CheckCircle 
+// - Speed, SupportAgent, EmojiTransportation, Group (features)
 
 export default Landing;
