@@ -1,4 +1,3 @@
-// client/src/pages/TransporterDashboard.jsx
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -9,9 +8,13 @@ import {
 import { RequestQuote, CheckCircle, Pending, TrendingUp } from '@mui/icons-material';
 import API from '../services/api';
 
+// TransporterDashboard which is the main landing page for logged‑in transporters
+// Shows metrics (total quotes, accepted, pending)
+// Displays a list of pending bookings that need quotes
+// Also shows a table of the transporter's recent quotes 
 const TransporterDashboard = () => {
-  const [pendingBookings, setPendingBookings] = useState([]);
-  const [myQuotes, setMyQuotes] = useState([]);
+  const [pendingBookings, setPendingBookings] = useState([]); // Bookings that need quotes
+  const [myQuotes, setMyQuotes] = useState([]);               // Quotes submitted by this transporter
   const [metrics, setMetrics] = useState({
     totalQuotes: 0,
     acceptedQuotes: 0,
@@ -20,19 +23,22 @@ const TransporterDashboard = () => {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
+  // When the component mounts, fetch both bookings and quotes in parallel
   useEffect(() => {
     fetchData();
-  }, []);
+  }, []); // Empty dependency array 
 
   const fetchData = async () => {
     try {
+      // We used Promise.all because it allows both API calls to run simultaneously, improving performance
       const [bookingsRes, quotesRes] = await Promise.all([
-        API.get('/api/bookings'), // pending bookings for transporter
-        API.get('/api/quotes')    // transporter's own quotes
+        API.get('/api/bookings'), // Returns bookings that are pending and not yet quoted? (backend filtering)
+        API.get('/api/quotes')    // Returns all quotes for this transporter
       ]);
       setPendingBookings(bookingsRes.data);
       setMyQuotes(quotesRes.data);
 
+      // Calculate metrics from the quotes array
       const myQuotesArr = quotesRes.data;
       const accepted = myQuotesArr.filter(q => q.status === 'accepted').length;
       const pending = myQuotesArr.filter(q => q.status === 'pending').length;
@@ -42,27 +48,35 @@ const TransporterDashboard = () => {
         pendingQuotes: pending
       });
     } catch (err) {
-      console.error(err);
+      console.error(err); // Log error silently
     } finally {
       setLoading(false);
     }
   };
 
+  // Navigate to the "Create Quote" page for a specific booking
   const handleQuote = (bookingId) => {
     navigate(`/quotes/new/${bookingId}`);
   };
 
+  // Show loading spinner while data is being fetched
   if (loading) return <CircularProgress sx={{ display: 'block', mx: 'auto', mt: 4 }} />;
 
   return (
+
+    // - We made thhis page accessible only to users with role 'transporter'
+    // - The API endpoint /api/bookings returns only bookings that are 'pending' and not yet quoted? \
+    // - We used Promise.all because it fires both requests in parallel, and improves load time
+    // - Recent quotes are sliced to 5; the API might return them sorted by createdAt descending t
     <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
       <Typography variant="h4" gutterBottom>Transporter Dashboard</Typography>
       <Typography variant="subtitle1" color="text.secondary" gutterBottom>
         Welcome back! Overview of your quoting activity.
       </Typography>
 
-      {/* Metric Cards */}
+      {/* METRIC CARDS – 3 cards showing total quotes, accepted, pending */}
       <Grid container spacing={3} sx={{ mb: 4 }}>
+        {/* Total Quotes Card */}
         <Grid item xs={12} sm={4}>
           <Card>
             <CardContent>
@@ -74,6 +88,8 @@ const TransporterDashboard = () => {
             </CardContent>
           </Card>
         </Grid>
+
+        {/* Accepted Quotes Card */}
         <Grid item xs={12} sm={4}>
           <Card>
             <CardContent>
@@ -82,10 +98,13 @@ const TransporterDashboard = () => {
                 <Typography variant="h4">{metrics.acceptedQuotes}</Typography>
               </Box>
               <Typography variant="subtitle2" color="text.secondary">Accepted Quotes</Typography>
+              {/* A small caption showing total, though same as the number above, could be improved */}
               <Typography variant="caption" color="success.main">+{metrics.acceptedQuotes > 0 ? metrics.acceptedQuotes : 0} total</Typography>
             </CardContent>
           </Card>
         </Grid>
+
+        {/* Pending Quotes Card */}
         <Grid item xs={12} sm={4}>
           <Card>
             <CardContent>
@@ -101,7 +120,7 @@ const TransporterDashboard = () => {
 
       <Divider sx={{ my: 2 }} />
 
-      {/* Quick Actions */}
+      {/* QUICK ACTIONS – button to view all quotes */}
       <Typography variant="h5" gutterBottom>Quick Actions</Typography>
       <Button
         variant="contained"
@@ -114,7 +133,7 @@ const TransporterDashboard = () => {
 
       <Divider sx={{ my: 2 }} />
 
-      {/* Pending Bookings (need quotes) */}
+      {/* PENDING BOOKINGS TABLE, bookings that need quotes */}
       <Typography variant="h5" gutterBottom>Pending Bookings (Need Quotes)</Typography>
       {pendingBookings.length === 0 ? (
         <Typography>No pending bookings at the moment.</Typography>
@@ -149,7 +168,7 @@ const TransporterDashboard = () => {
 
       <Divider sx={{ my: 2 }} />
 
-      {/* Recent Quotes */}
+      {/* RECENT QUOTES, shows the transporter's last 5 quotes */}
       <Typography variant="h5" gutterBottom>Recent Quotes</Typography>
       {myQuotes.length === 0 ? (
         <Typography>You haven't submitted any quotes yet.</Typography>
@@ -163,12 +182,17 @@ const TransporterDashboard = () => {
             </TableRow>
           </TableHead>
           <TableBody>
+            {/* .slice(0,5) limits to the 5 most recent – assumes API returns newest first */}
             {myQuotes.slice(0, 5).map(quote => (
               <TableRow key={quote._id}>
                 <TableCell>{quote.booking?.pickupLocation} → {quote.booking?.deliveryLocation}</TableCell>
                 <TableCell>€{quote.amount}</TableCell>
                 <TableCell>
-                  <Chip label={quote.status} color={quote.status === 'accepted' ? 'success' : (quote.status === 'pending' ? 'warning' : 'default')} size="small" />
+                  <Chip
+                    label={quote.status}
+                    color={quote.status === 'accepted' ? 'success' : (quote.status === 'pending' ? 'warning' : 'default')}
+                    size="small"
+                  />
                 </TableCell>
               </TableRow>
             ))}
@@ -178,5 +202,18 @@ const TransporterDashboard = () => {
     </Container>
   );
 };
+
+// MUI components used for this page:
+// - Container: centres content with max width "lg"
+// - Grid: responsive layout for metric cards
+// - Card, CardContent: white cards with shadow
+// - Typography: headings and text
+// - Table, TableHead, TableBody, TableRow, TableCell: display pending bookings and quotes
+// - Chip: status badge for quote status
+// - CircularProgress: loading spinner
+// - Box: flex layout inside cards
+// - Divider: horizontal line to separate sections
+// - Icons (RequestQuote, CheckCircle, Pending, TrendingUp): visual cues
+
 
 export default TransporterDashboard;

@@ -28,19 +28,29 @@ import CssBaseline from '@mui/material/CssBaseline';
 import { ThemeProvider as CustomThemeProvider, useThemeMode } from './context/ThemeContext';
 import getTheme from './theme';
 
-// Inner component that uses the theme mode
 function AppContent() {
+  // Get current theme mode ('light' or 'dark') from our custom ThemeContext
   const { mode } = useThemeMode();
+  // Generate the MUI theme based on the mode (light/dark)
   const theme = getTheme(mode);
 
   return (
+    // MuiThemeProvider applies the theme to all Material‑UI components
     <MuiThemeProvider theme={theme}>
+      {/* CssBaseline normalizes CSS and adds MUI's global styles (background, colours) */}
       <CssBaseline />
+      
+      {/* BrowserRouter enables client‑side routing (no page reloads) */}
       <BrowserRouter>
+        {/* Flex column layout to push footer to bottom */}
         <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+          {/* Navbar appears on every page (once, at the top) */}
           <Navbar />
+          
+          {/* Main content area – flexGrow:1 pushes footer down when content is short */}
           <Box component="main" sx={{ flexGrow: 1, pb: 4 }}>
             <Routes>
+              {/* PUBLIC ROUTES – anyone can access these, no login required */}
               <Route path="/" element={<Landing />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
@@ -48,6 +58,9 @@ function AppContent() {
               <Route path="/about" element={<AboutUs />} />
               <Route path="/contact" element={<ContactUs />} />
               <Route path="/terms" element={<TermsConditions />} />
+              
+              {/* PROTECTED ROUTES – require authentication (wrapped by PrivateRoute) */}
+              {/* PrivateRoute checks if user is logged in; if not, redirects to /login */}
               <Route element={<PrivateRoute />}>
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/profile" element={<Profile />} />
@@ -64,6 +77,8 @@ function AppContent() {
               </Route>
             </Routes>
           </Box>
+          
+          {/* Footer appears on every page */}
           <Footer />
         </Box>
       </BrowserRouter>
@@ -71,10 +86,14 @@ function AppContent() {
   );
 }
 
+// Main App component – wraps everything with context providers
 function App() {
   return (
+    // AuthProvider gives global authentication state (user, login, logout, loading)
     <AuthProvider>
+      {/* CustomThemeProvider provides dark/light mode toggle and stores preference in localStorage */}
       <CustomThemeProvider>
+        {/* AppContent contains all the routing and theme application */}
         <AppContent />
       </CustomThemeProvider>
     </AuthProvider>

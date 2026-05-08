@@ -128,7 +128,7 @@ const LabourerDashboard = () => {
         variant="contained"
         startIcon={<PersonAdd />}
         component="a"       // Renders as an anchor tag 
-        href="/api/labour?filter=assigned"   // Navigates to a dedicated page for labourer's assignments
+        href="my-labour"   // Navigates to a dedicated page for labourer's assignments
         sx={{ mb: 4 }}
       >
         View My Assignments

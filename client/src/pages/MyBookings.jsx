@@ -13,17 +13,22 @@ import CancelIcon from '@mui/icons-material/Close';
 import API from '../services/api';
 import BackButton from '../components/BackButton';
 
+// MyBookings page which displays all bookings for the logged‑in client
+// Allows viewing, editing, and deleting bookings 
+// Inline editing mode: users can edit pickup/delivery locations, weight, and special instructions
 const MyBookings = () => {
-  const [bookings, setBookings] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
-  const [editingId, setEditingId] = useState(null);
-  const [editData, setEditData] = useState({});
+  const [bookings, setBookings] = useState([]);      // Array of booking objects
+  const [loading, setLoading] = useState(true);      // Show spinner while fetching
+  const [error, setError] = useState('');            // Error message if fetch fails
+  const [editingId, setEditingId] = useState(null);  // ID of booking currently being edited
+  const [editData, setEditData] = useState({});      // Temporary data for the edit form
 
+  // When the component mounts, fetch all bookings for this client
   useEffect(() => {
     fetchBookings();
-  }, []);
+  }, []); // Empty dependency array 
 
+  // Fetch all bookings from the backend
   const fetchBookings = async () => {
     try {
       const res = await API.get('/api/bookings');
@@ -35,10 +40,13 @@ const MyBookings = () => {
     }
   };
 
+  // Delete a booking after confirmation
   const handleDelete = async (id) => {
+    // Use window.confirm native browser dialog we used this because it is simple but effective
     if (window.confirm('Are you sure you want to delete this booking?')) {
       try {
         await API.delete(`/api/bookings/${id}`);
+        // Remove deleted booking from state
         setBookings(bookings.filter(b => b._id !== id));
       } catch (err) {
         alert(err.response?.data?.message || 'Delete failed');
@@ -46,6 +54,7 @@ const MyBookings = () => {
     }
   };
 
+  // Start editing a booking, set editingId and copy relevant fields to editData
   const startEdit = (booking) => {
     setEditingId(booking._id);
     setEditData({
@@ -56,34 +65,48 @@ const MyBookings = () => {
     });
   };
 
+  // Cancel editing mode and clear temporary data
   const cancelEdit = () => {
     setEditingId(null);
     setEditData({});
   };
 
+  // Update editData state when user types in any field
   const handleEditChange = (e) => {
     setEditData({ ...editData, [e.target.name]: e.target.value });
   };
 
+  // Save the edited booking to the backend
   const saveEdit = async (id) => {
     try {
       const res = await API.put(`/api/bookings/${id}`, editData);
+      // Replace the updated booking in state with the response from backend
       setBookings(bookings.map(b => b._id === id ? res.data : b));
-      cancelEdit();
+      cancelEdit(); // Exit edit mode
     } catch (err) {
       alert(err.response?.data?.message || 'Update failed');
     }
   };
 
+  // Show loading spinner while fetching data
   if (loading) return <CircularProgress />;
+  // Show error message if fetch failed
   if (error) return <Alert severity="error">{error}</Alert>;
 
+  // - This page is accessible only to clients (role based)
+  // - Edit and Delete buttons are disabled if booking.status is not 'pending'
+  // - Inline editing only updates pickup, delivery, weight, and special instructions
+  // - After editing, the entire booking state is refreshed with the updated object from backend
+  // - Deleting a booking removes it from the state immediately
+  // - The table uses inline edit mode for simplicity 
   return (
     <Container maxWidth="lg" sx={{ mt: 4 }}>
       <Typography variant="h4" gutterBottom>My Bookings</Typography>
       {bookings.length === 0 ? (
+        // Empty state: encourage user to create first booking
         <Typography>You have no bookings yet. <Link to="/bookings/new">Create one</Link>.</Typography>
       ) : (
+        // TableContainer adds scrolling for large tables and wraps with Paper
         <TableContainer component={Paper}>
           <Table>
             <TableHead>
@@ -100,7 +123,7 @@ const MyBookings = () => {
               {bookings.map(booking => (
                 <TableRow key={booking._id}>
                   {editingId === booking._id ? (
-                    // Edit row
+                    // EDIT MODE uses inline form with TextFields for editing
                     <>
                       <TableCell>
                         <TextField
@@ -123,7 +146,7 @@ const MyBookings = () => {
                       <TableCell>
                         <TextField
                           name="weightKg"
-                          type="number"
+                          type="number"     // Shows numeric keyboard on mobile
                           value={editData.weightKg}
                           onChange={handleEditChange}
                           size="small"
@@ -142,7 +165,7 @@ const MyBookings = () => {
                       </TableCell>
                     </>
                   ) : (
-                    // Display row
+                    // *DISPLAY MODE* – read‑only row with action buttons
                     <>
                       <TableCell>{booking.pickupLocation}</TableCell>
                       <TableCell>{booking.deliveryLocation}</TableCell>
@@ -150,6 +173,7 @@ const MyBookings = () => {
                       <TableCell>{new Date(booking.pickupDate).toLocaleDateString()}</TableCell>
                       <TableCell>{booking.status}</TableCell>
                       <TableCell>
+                        {/* View details button – always available */}
                         <IconButton
                           component={Link}
                           to={`/bookings/${booking._id}`}
@@ -158,6 +182,7 @@ const MyBookings = () => {
                         >
                           <VisibilityIcon />
                         </IconButton>
+                        {/* Edit button – disabled unless status is 'pending' */}
                         <IconButton
                           onClick={() => startEdit(booking)}
                           disabled={booking.status !== 'pending'}
@@ -166,6 +191,7 @@ const MyBookings = () => {
                         >
                           <EditIcon />
                         </IconButton>
+                        {/* Delete button – disabled unless status is 'pending' */}
                         <IconButton
                           onClick={() => handleDelete(booking._id)}
                           disabled={booking.status !== 'pending'}
@@ -187,5 +213,22 @@ const MyBookings = () => {
     </Container>
   );
 };
+
+// MUI components used for this page:
+// - Container: centers content with max width "lg"
+// - Typography: page title and empty state text
+// - Table, TableContainer, TableHead, TableBody, TableRow, TableCell: display bookings in grid
+// - Paper: wraps table with a white background and shadow
+// - TextField: inline editing inputs (pickup, delivery, weight)
+// - IconButton: buttons with icons (View, Edit, Delete, Save, Cancel)
+// - CircularProgress: loading spinner
+// - Alert: error message display
+// - BackButton: custom component to go back
+// Icons used: VisibilityIcon: view booking details
+// - EditIcon: start editing
+// - DeleteIcon: delete booking
+// - SaveIcon: save edited booking
+// - CancelIcon: cancel edit mode
+
 
 export default MyBookings;

@@ -1,4 +1,3 @@
-// client/src/pages/TermsConditions.jsx
 import React, { useState, useEffect } from 'react';
 import { Container, Typography, Box, Card, CardContent, Divider, useTheme } from '@mui/material';
 import {
@@ -6,6 +5,11 @@ import {
   Shield, Lock, Edit, Email
 } from '@mui/icons-material';
 
+// Terms & Conditions page to show legal document outlining rules for using TruckFlow
+// Features a sticky sidebar with table of contents that highlights the current section
+// Uses Intersection Observer to track which section is visible and update sidebar highlight
+
+// Array to store the terms and conditions
 const sections = [
   {
     id: 'acceptance',
@@ -59,8 +63,9 @@ const sections = [
 
 const TermsConditions = () => {
   const theme = useTheme();
-  const [activeId, setActiveId] = useState('acceptance');
+  const [activeId, setActiveId] = useState('acceptance'); // Currently visible section ID
 
+  // Set up Intersection Observer to track which section is in the viewport
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -68,26 +73,35 @@ const TermsConditions = () => {
           if (entry.isIntersecting) setActiveId(entry.target.id);
         });
       },
-      { rootMargin: '-30% 0px -60% 0px' }
+      { rootMargin: '-30% 0px -60% 0px' } // Adjusts when a section is considered "active"
     );
+    // Observe each section element by its id
     sections.forEach(({ id }) => {
       const el = document.getElementById(id);
       if (el) observer.observe(el);
     });
+    // Cleanup observer on component unmount
     return () => observer.disconnect();
   }, []);
 
+  // Smooth scroll to a section when clicking sidebar link
   const scrollTo = (id) => {
     const el = document.getElementById(id);
     if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
 
+  // - We made this page is publicly accessible. We added an intersection Observer API to track which section is currently visible in the viewport
+  // - rootMargin: '-30% 0px -60% 0px' means a section is considered "active" when it's in the middle 10-70% of the screen
+  // - Sections have scrollMarginTop to prevent the fixed navbar from covering the title when scrolling via hash or sidebar click
+  // - Sidebar is sticky (position: sticky) and remains visible as you scroll
+  // - The table of contents uses a hover effect that combines with the active highlight for better UI
   return (
     <Container maxWidth="lg" sx={{ py: 10 }}>
+      {/* Two-column layout: sidebar (sticky) + main content */}
       <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '280px 1fr' }, gap: 5, alignItems: 'start' }}>
 
-        {/* Sidebar */}
-        <Box sx={{ position: 'sticky', top: 90 }}>
+        {/* SIDEBAR – table of contents & quick links */}
+        <Box sx={{ position: 'sticky', top: 90 }}>  {/* Stays in place while scrolling */}
           <Card elevation={1} sx={{ mb: 3 }}>
             <CardContent sx={{ p: 3, '&:last-child': { pb: 3 } }}>
               <Typography variant="subtitle2" fontWeight="bold" color="text.secondary"
@@ -102,6 +116,7 @@ const TermsConditions = () => {
                     display: 'flex', alignItems: 'center', gap: 1.5,
                     py: 1, px: 1.5, mb: 0.5, borderRadius: 1,
                     cursor: 'pointer', transition: 'all 0.2s',
+                    // Highlight active section with primary background and white text
                     bgcolor: activeId === section.id ? 'primary.main' : 'transparent',
                     '&:hover': {
                       bgcolor: activeId === section.id ? 'primary.dark' : theme.palette.action.hover,
@@ -127,6 +142,7 @@ const TermsConditions = () => {
             </CardContent>
           </Card>
 
+          {/* Quick Links card – navigation to other public pages */}
           <Card elevation={1}>
             <CardContent sx={{ p: 3, '&:last-child': { pb: 3 } }}>
               <Typography variant="subtitle2" fontWeight="bold" color="text.secondary"
@@ -153,15 +169,16 @@ const TermsConditions = () => {
                   >
                     {link.label}
                   </Box>
-                  {i < 3 && <Divider />}
+                  {i < 3 && <Divider />}   {/* Add divider between links except last */}
                 </Box>
               ))}
             </CardContent>
           </Card>
         </Box>
 
-        {/* Main Content */}
+        {/* MAIN CONTENT – actual terms and conditions */}
         <Box>
+          {/* Header section with icon and last updated date */}
           <Box sx={{ textAlign: 'center', mb: 6 }}>
             <Box sx={{
               bgcolor: 'primary.main', borderRadius: '50%', p: 2,
@@ -178,6 +195,7 @@ const TermsConditions = () => {
             <Divider sx={{ mt: 4 }} />
           </Box>
 
+          {/* Introductory card */}
           <Card elevation={1} sx={{ mb: 3 }}>
             <CardContent sx={{ p: 4, '&:last-child': { pb: 4 } }}>
               <Typography variant="body1" lineHeight={1.8} sx={{ color: 'text.secondary' }}>
@@ -189,6 +207,7 @@ const TermsConditions = () => {
             </CardContent>
           </Card>
 
+          {/* Render each section as a card with scroll margin top (so scrolling doesn't hide under navbar) */}
           {sections.map((section, i) => (
             <Card key={i} id={section.id} elevation={1} sx={{ mb: 3, scrollMarginTop: '80px' }}>
               <CardContent sx={{ p: 4, '&:last-child': { pb: 4 } }}>
@@ -208,5 +227,14 @@ const TermsConditions = () => {
     </Container>
   );
 };
+
+// MUI components used for this page:
+// - Container: centres content with max width "lg"
+// - Box: grid layout, flex, and spacing wrappers
+// - Typography: headings, body text, captions
+// - Card, CardContent: cards for each section, sidebar, and intro
+// - Divider: horizontal lines between sections and sidebar links
+// - useTheme: accesses theme for hover colour customization
+// Icons: 8 different icons representing each section (Gavel, AccountCircle, Payment, EventBusy, Shield, Lock, Edit, Email)
 
 export default TermsConditions;
