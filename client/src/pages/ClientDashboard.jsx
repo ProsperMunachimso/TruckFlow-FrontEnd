@@ -12,41 +12,65 @@ import {
 } from '@mui/icons-material';
 import API from '../services/api';
 
+// ClientDashboard, it shows the main landing page for logged‑in clients
+// Shows key metrics like active shipments, completed deliveries, labour requests, total spend.
+// Also displays quick action buttons and a table of recent bookings.
+
+
+
+
+// We used many MUI components here:
+// - Container: centers content with max width
+// - Grid & Card: responsive layout for metrics
+// - Typography: consistent text styling
+// - Table: displays recent bookings in rows/columns
+// - Chip: shows status with different colours
+// - CircularProgress: loading spinner while fetching data
+// - Divider: horizontal line to separate sections
+// - Icons (LocalShipping, CheckCircle, etc.): visual cues for each metric and button
+//
+// The component fetches data from three endpoints (/bookings, /labour, /invoices)
+// and calculates dashboard metrics. It also handles loading states and empty states.
 const ClientDashboard = () => {
+  // State to hold the four dashboard metrics
   const [metrics, setMetrics] = useState({
     activeShipments: 0,
     completedDeliveries: 0,
     labourRequestsPending: 0,
     totalSpend: 0
   });
-  const [recentBookings, setRecentBookings] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [recentBookings, setRecentBookings] = useState([]); // Last 5 bookings
+  const [loading, setLoading] = useState(true); // Show spinner while fetching
 
+  // When the component mounts, fetch all dashboard data
   useEffect(() => {
     fetchDashboardData();
-  }, []);
+  }, []); // Empty dependency array
 
+  // Fetches bookings, labour requests, invoices and calculates metrics
   const fetchDashboardData = async () => {
     try {
-      // Fetch all bookings for the client
+      // 1. Get all bookings for this client
       const bookingsRes = await API.get('/api/bookings');
       const bookings = bookingsRes.data;
 
-      // Active shipments: status not 'delivered' or 'cancelled'
+      // Active shipments shows any status except delivered or cancelled
+      // We use .filter() to exclude finished/cancelled ones
       const active = bookings.filter(b => !['delivered', 'cancelled'].includes(b.status));
-      // Completed deliveries: status 'delivered'
+      // Completed, sets the status exactly delivered
       const completed = bookings.filter(b => b.status === 'delivered');
 
-      // Fetch labour requests (returns requests for client's bookings)
+      // 2. Get labour requests returns requests for client's bookings
       const labourRes = await API.get('/api/labour');
       const pendingLabour = labourRes.data.filter(l => l.status === 'pending');
 
-      // Fetch invoices to calculate total spend (paid invoices only)
+      // 3. Get invoices and sum only the paid ones grandTotal
       const invoicesRes = await API.get('/api/invoices');
       const totalPaid = invoicesRes.data
         .filter(inv => inv.paymentStatus === 'paid')
         .reduce((sum, inv) => sum + inv.grandTotal, 0);
 
+      // Update state with calculated values
       setMetrics({
         activeShipments: active.length,
         completedDeliveries: completed.length,
@@ -54,38 +78,44 @@ const ClientDashboard = () => {
         totalSpend: totalPaid
       });
 
-      // Recent bookings: last 5 (by createdAt)
+      // Recent bookings: take the 5 most recently created, we used createdAt for this, to accurately get the most recent 5
       const sorted = [...bookings].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
       setRecentBookings(sorted.slice(0, 5));
 
     } catch (err) {
       console.error('Failed to load dashboard data', err);
     } finally {
-      setLoading(false);
+      setLoading(false); 
     }
   };
 
+  // Helper function to map booking status to MUI chip colour
+  // MUI chip colors: warning = yellow, info = light blue, primary = blue, success = green
   const getStatusColor = (status) => {
     switch (status) {
-      case 'pending': return 'warning';
-      case 'confirmed': return 'info';
-      case 'in_transit': return 'primary';
-      case 'delivered': return 'success';
+      case 'pending': return 'warning';   // Waiting for driver
+      case 'confirmed': return 'info';    // Booked but not started
+      case 'in_transit': return 'primary'; // On the way
+      case 'delivered': return 'success';  // Completed
       default: return 'default';
     }
   };
 
+  // Show loading spinner while data is being fetched
   if (loading) return <CircularProgress sx={{ display: 'block', mx: 'auto', mt: 4 }} />;
 
   return (
+    // Container limits max width on large screens and adds margin top/bottom
     <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
       <Typography variant="h4" gutterBottom>Dashboard</Typography>
       <Typography variant="subtitle1" color="text.secondary" gutterBottom>
         Welcome back! Here's an overview of your operations.
       </Typography>
 
-      {/* Metric Cards */}
+      {/* METRIC CARDS – 4 cards in a responsive grid */}
       <Grid container spacing={3} sx={{ mb: 4 }}>
+        
+        {/* This shows the card for the active Shipments for the user logged i */}
         <Grid item xs={12} sm={6} md={3}>
           <Card>
             <CardContent>
@@ -98,6 +128,8 @@ const ClientDashboard = () => {
             </CardContent>
           </Card>
         </Grid>
+
+        {/* This shows the card for the completed Deliveries for the user logged in */}
         <Grid item xs={12} sm={6} md={3}>
           <Card>
             <CardContent>
@@ -110,6 +142,8 @@ const ClientDashboard = () => {
             </CardContent>
           </Card>
         </Grid>
+
+        {/* This shows the Card for the Labour Requests Pending for the user logged in */}
         <Grid item xs={12} sm={6} md={3}>
           <Card>
             <CardContent>
@@ -122,6 +156,8 @@ const ClientDashboard = () => {
             </CardContent>
           </Card>
         </Grid>
+
+        {/* This shows the card for the total spend for th e user logged in */}
         <Grid item xs={12} sm={6} md={3}>
           <Card>
             <CardContent>
@@ -138,7 +174,7 @@ const ClientDashboard = () => {
 
       <Divider sx={{ my: 2 }} />
 
-      {/* Quick Actions */}
+      {/* We added this section so the user can quickly navigate to essential actions */}
       <Typography variant="h5" gutterBottom>Quick Actions</Typography>
       <Grid container spacing={2} sx={{ mb: 4 }}>
         <Grid item xs={12} sm={6} md={4}>
@@ -160,7 +196,7 @@ const ClientDashboard = () => {
 
       <Divider sx={{ my: 2 }} />
 
-      {/* Recent Bookings */}
+      {/* This shows a table for the recent bookings for the user logged in */}
       <Typography variant="h5" gutterBottom>Recent Bookings</Typography>
       <Typography variant="subtitle2" color="text.secondary" gutterBottom>
         Your latest shipment activities
@@ -181,6 +217,7 @@ const ClientDashboard = () => {
           <TableBody>
             {recentBookings.map(booking => (
               <TableRow key={booking._id}>
+                {/* Display only the last 6 characters of the booking ID for brevity */}
                 <TableCell>BK-{booking._id.slice(-6)}</TableCell>
                 <TableCell>{booking.pickupLocation} → {booking.deliveryLocation}</TableCell>
                 <TableCell>
