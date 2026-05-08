@@ -157,14 +157,14 @@ const BookingDetails = () => {
                   <Scale color="primary" /> Cargo Details
                 </Typography>
                 <Box sx={{ pl: 4 }}>
-                  <Typography variant="body1"><strong>Weight:</strong> {booking.weightKg ? `${booking.weightKg} kg` : 'Not specified'}</Typography>
+                  <Typography variant="subtitle1"><strong>Weight:</strong> {booking.weightKg ? `${booking.weightKg} kg` : 'Not specified'}</Typography>
                   {booking.dimensions?.length && booking.dimensions?.width && booking.dimensions?.height && (
-                    <Typography variant="body1" sx={{ mt: 1 }}>
+                    <Typography variant="subtitle1" sx={{ mt: 1 }}>
                       <strong>Dimensions:</strong> {booking.dimensions.length} x {booking.dimensions.width} x {booking.dimensions.height} cm
                     </Typography>
                   )}
                   {booking.cargoType && (
-                    <Typography variant="body1" sx={{ mt: 1 }}><strong>Cargo Type:</strong> {booking.cargoType}</Typography>
+                    <Typography variant="subtitle1" sx={{ mt: 1 }}><strong>Cargo Type:</strong> {booking.cargoType}</Typography>
                   )}
                 </Box>
               </CardContent>
@@ -179,7 +179,7 @@ const BookingDetails = () => {
                   <CalendarToday color="primary" /> Schedule
                 </Typography>
                 <Box sx={{ pl: 4 }}>
-                  <Typography variant="body1">
+                  <Typography variant="subtitle1">
                     <strong>Pickup Date:</strong> {new Date(booking.pickupDate).toLocaleString()}
                   </Typography>
                 </Box>
