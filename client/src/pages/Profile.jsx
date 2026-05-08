@@ -17,6 +17,7 @@ const Profile = () => {
   const [formData, setFormData] = useState({ name: '', phone: '', address: '' });
   const [message, setMessage] = useState(''); // Success message
   const [error, setError] = useState('');     // Update error message
+  const [phoneError, setPhoneError] = useState(''); // Phone validation error
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false); // Controls delete confirmation dialog
   const [deletePassword, setDeletePassword] = useState(''); // Password for account deletion
   const [deleteError, setDeleteError] = useState(''); // Error during deletion
@@ -32,15 +33,39 @@ const Profile = () => {
     }
   }, [user]); // Re-run whenever user changes
 
+  // Validate phone number: optional, but if provided must be valid (Irish/International format)
+  const validatePhone = (phone) => {
+    if (!phone.trim()) return ''; // empty is allowed
+    // Regex: allows Irish (08x xxx xxxx or +353 8x xxx xxxx) or international format (+ followed by digits, spaces, hyphens)
+    const phoneRegex = /^(\+?[0-9]{1,3}[-.\s]?)?\(?[0-9]{3}\)?[-.\s]?[0-9]{3}[-.\s]?[0-9]{4}$/;
+    if (!phoneRegex.test(phone)) {
+      return 'Please enter a valid phone number (e.g., 0871234567, +353871234567)';
+    }
+    return '';
+  };
+
   // Handle changes to text fields
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+    if (name === 'phone') {
+      setPhoneError(validatePhone(value));
+    }
   };
 
   // Submit updated profile to the backend
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError(''); // Clear previous errors
+    setError('');
+    setPhoneError('');
+    
+    // Validate phone before submission
+    const phoneValidationError = validatePhone(formData.phone);
+    if (phoneValidationError) {
+      setPhoneError(phoneValidationError);
+      return;
+    }
+    
     try {
       await API.put('/api/users/profile', formData);
       setMessage('Profile updated successfully');
@@ -99,6 +124,8 @@ const Profile = () => {
             margin="normal" 
             value={formData.phone} 
             onChange={handleChange} 
+            error={!!phoneError}
+            helperText={phoneError}
           />
           <TextField 
             fullWidth 
@@ -187,6 +214,5 @@ const Profile = () => {
 // - Alert: success/error messages
 // - Dialog, DialogTitle, DialogContent, DialogActions: modal confirmation for account deletion
 // - useTheme: accesses theme for custom styling (dialog background)
-
 
 export default Profile;
