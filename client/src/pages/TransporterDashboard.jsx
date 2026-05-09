@@ -7,6 +7,7 @@ import {
 } from '@mui/material';
 import { RequestQuote, CheckCircle, Pending, TrendingUp } from '@mui/icons-material';
 import API from '../services/api';
+import { AuthContext } from '../context/AuthContext';
 
 // TransporterDashboard which is the main landing page for logged‑in transporters
 // Shows metrics (total quotes, accepted, pending)
