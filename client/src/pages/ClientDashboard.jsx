@@ -10,7 +10,7 @@ import {
   AddCircle, TrackChanges, Assignment
 } from '@mui/icons-material';
 import API from '../services/api';
-
+import { AuthContext } from '../context/AuthContext';
 // ClientDashboard, it shows the main landing page for logged‑in clients
 // Shows key metrics like active shipments, completed deliveries, labour requests, total spend.
 // Also displays quick action buttons and a table of recent bookings.
@@ -97,6 +97,7 @@ const ClientDashboard = () => {
     }
   };
 
+  const { user } = useContext(AuthContext);
   // Show loading spinner while data is being fetched
   if (loading) return <CircularProgress sx={{ display: 'block', mx: 'auto', mt: 4 }} />;
 

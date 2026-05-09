@@ -6,7 +6,7 @@ import {
 } from '@mui/material';
 import { Work, AssignmentTurnedIn, CheckCircle, PersonAdd } from '@mui/icons-material';
 import API from '../services/api';
-
+import { AuthContext } from '../context/AuthContext';
 // LabourerDashboard which is the main landing page for logged‑in labourers
 // Shows available labour requests 
 // Also shows their assigned jobs and completed work.
@@ -41,7 +41,7 @@ const LabourerDashboard = () => {
       setLoading(false); // Always stop loading, even on error
     }
   };
-
+  const { user } = useContext(AuthContext);
   // Labourer assigns themselves to a pending request
   const assignSelf = async (requestId) => {
     try {

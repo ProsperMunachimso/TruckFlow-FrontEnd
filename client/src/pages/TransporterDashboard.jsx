@@ -58,7 +58,8 @@ const TransporterDashboard = () => {
   const handleQuote = (bookingId) => {
     navigate(`/quotes/new/${bookingId}`);
   };
-
+  
+  const { user } = useContext(AuthContext);
   // Show loading spinner while data is being fetched
   if (loading) return <CircularProgress sx={{ display: 'block', mx: 'auto', mt: 4 }} />;
 
