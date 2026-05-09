@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import {
   Container, Grid, Card, CardContent, Typography, Button,
@@ -28,6 +28,7 @@ import { AuthContext } from '../context/AuthContext';
 // The component fetches data from three endpoints (/bookings, /labour, /invoices)
 // and calculates dashboard metrics. It also handles loading states and empty states.
 const ClientDashboard = () => {
+   const { user } = useContext(AuthContext);
   // State to hold the four dashboard metrics
   const [metrics, setMetrics] = useState({
     activeShipments: 0,
@@ -97,7 +98,6 @@ const ClientDashboard = () => {
     }
   };
 
-  const { user } = useContext(AuthContext);
   // Show loading spinner while data is being fetched
   if (loading) return <CircularProgress sx={{ display: 'block', mx: 'auto', mt: 4 }} />;
 

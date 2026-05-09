@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Container, Grid, Card, CardContent, Typography, Button,
@@ -13,6 +13,7 @@ import API from '../services/api';
 // Displays a list of pending bookings that need quotes
 // Also shows a table of the transporter's recent quotes 
 const TransporterDashboard = () => {
+   const { user } = useContext(AuthContext);
   const [pendingBookings, setPendingBookings] = useState([]); // Bookings that need quotes
   const [myQuotes, setMyQuotes] = useState([]);               // Quotes submitted by this transporter
   const [metrics, setMetrics] = useState({
@@ -58,8 +59,7 @@ const TransporterDashboard = () => {
   const handleQuote = (bookingId) => {
     navigate(`/quotes/new/${bookingId}`);
   };
-  
-  const { user } = useContext(AuthContext);
+
   // Show loading spinner while data is being fetched
   if (loading) return <CircularProgress sx={{ display: 'block', mx: 'auto', mt: 4 }} />;
 

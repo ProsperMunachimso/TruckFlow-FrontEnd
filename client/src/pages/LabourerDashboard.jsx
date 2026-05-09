@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import {
   Container, Grid, Card, CardContent, Typography, Button,
   Table, TableHead, TableRow, TableCell, TableBody, Chip,
@@ -7,11 +7,13 @@ import {
 import { Work, AssignmentTurnedIn, CheckCircle, PersonAdd } from '@mui/icons-material';
 import API from '../services/api';
 import { AuthContext } from '../context/AuthContext';
+
 // LabourerDashboard which is the main landing page for logged‑in labourers
 // Shows available labour requests 
 // Also shows their assigned jobs and completed work.
 // Allows labourers to claim pending requests with a single click.
 const LabourerDashboard = () => {
+  const { user } = useContext(AuthContext);
   // State for two lists of labour requests
   const [availableRequests, setAvailableRequests] = useState([]); // Requests not yet assigned to anyone
   const [assignedRequests, setAssignedRequests] = useState([]);   // Requests assigned to this labourer
@@ -41,7 +43,7 @@ const LabourerDashboard = () => {
       setLoading(false); // Always stop loading, even on error
     }
   };
-  const { user } = useContext(AuthContext);
+  
   // Labourer assigns themselves to a pending request
   const assignSelf = async (requestId) => {
     try {
@@ -128,7 +130,7 @@ const LabourerDashboard = () => {
         variant="contained"
         startIcon={<PersonAdd />}
         component="a"       // Renders as an anchor tag 
-        href="my-labour"   // Navigates to a dedicated page for labourer's assignments
+        href="/my-labour"   // Navigates to a dedicated page for labourer's assignments
         sx={{ mb: 4 }}
       >
         View My Assignments
