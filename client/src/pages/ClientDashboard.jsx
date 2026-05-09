@@ -105,7 +105,7 @@ const ClientDashboard = () => {
     <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
       <Typography variant="h4" gutterBottom>Dashboard</Typography>
       <Typography variant="subtitle1" color="text.secondary" gutterBottom>
-        Welcome back! Here's an overview of your operations.
+        Welcome back, {user?.name}! Here's an overview of your operations. Here's an overview of your operations.
       </Typography>
 
       {/* METRIC CARDS – 4 cards in a responsive grid */}

@@ -71,7 +71,7 @@ const TransporterDashboard = () => {
     <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
       <Typography variant="h4" gutterBottom>Transporter Dashboard</Typography>
       <Typography variant="subtitle1" color="text.secondary" gutterBottom>
-        Welcome back! Overview of your quoting activity.
+        Welcome back, {user?.name}! Here's an overview of your operations. Overview of your quoting activity.
       </Typography>
 
       {/* METRIC CARDS – 3 cards showing total quotes, accepted, pending */}

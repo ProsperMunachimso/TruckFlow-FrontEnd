@@ -72,7 +72,7 @@ const LabourerDashboard = () => {
     <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
       <Typography variant="h4" gutterBottom>Labourer Dashboard</Typography>
       <Typography variant="subtitle1" color="text.secondary" gutterBottom>
-        Welcome back! Track your labour assignments.
+        Welcome back, {user?.name}! Here's an overview of your operations. Track your labour assignments.
       </Typography>
 
       {/* Display success or error messages */}
