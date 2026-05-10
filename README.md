@@ -89,9 +89,9 @@ REACT_APP_CLIENT_URL=http://localhost:3000
 6. Ensure the backend is running (on port 9002) and MongoDB is connected.
 
 ## Division of Labour (Assignment 3 iteration)
-- **Prosper (45%)** – Client dashboard, booking CRUD, profile, invoices, rating, API integration, overall architecture, static pages (Services, About, Contact, Terms)
+- **Prosper (45%)** – Client dashboard, booking CRUD, profile, invoices, rating, API integration, overall architecture, static pages (Services, About)
 - **Vitor (20%)** – Labourer and transporter flows, quotes, labour assignment, backend integration for labour endpoints.
-- **Chibuike (35%)** – UI/UX design with Material UI, responsive layout, deployment, README.
+- **Chibuike (35%)** – UI/UX design with Material UI, responsive layout, deployment, README, static pages ( Contact, Terms)
 
 ## Known Limitations / Future Enhancements
 - Reject Quote button not implemented (planned).
